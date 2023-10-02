@@ -1,4 +1,4 @@
 # Ignore the contents of the Inputs folder
-Inputs/*
-Output/*
-report/*
+Inputs/
+Output/
+report/
