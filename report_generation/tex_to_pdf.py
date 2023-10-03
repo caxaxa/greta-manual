@@ -1,24 +1,27 @@
 import subprocess
 
-def run_pdflatex(tex_path, output_dir):
-    process = subprocess.Popen(["pdflatex", tex_path], cwd=output_dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+def run_pdflatex(tex_path, output_dir, runs=1):
+    for _ in range(runs):
+        process = subprocess.Popen(
+            ["pdflatex", "-interaction=nonstopmode", tex_path],
+            cwd=output_dir,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
 
-    while True:
-        output = process.stdout.readline()
-        error_output = process.stderr.readline()
-        
-        if output:
-            print(output.strip())
-        if error_output:
-            print(error_output.strip())
+        stdout, stderr = process.communicate()
 
-        # Break the loop if the process is done
-        return_code = process.poll()
-        if return_code is not None:
-            print(f"Return code: {return_code}")
+        # # print outputs
+        # if stdout:
+        #     print(stdout)
+        # if stderr:
+        #     print(stderr)
+
+        # Break the loop if the process had an error
+        if process.returncode != 0:
+            print(f"Error generating PDF. Return code: {process.returncode}")
             break
-
-    if return_code == 0:
-        print("PDF generated successfully!")
-    else:
-        print("Error generating PDF.")
+    
+    if process.returncode == 0:
+        print("Compiling successful")
