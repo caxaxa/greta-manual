@@ -3,7 +3,6 @@ import shutil
 
 def dxf_file_path(current_dir):
     dxf_dir = os.path.join(current_dir, "Inputs", "dxf")
-    
     dxf_file_path, new_path = get_single_file_in_directory(current_dir, dxf_dir)
 
     if dxf_file_path:

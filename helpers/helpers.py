@@ -1,13 +1,12 @@
 import cv2
 import os
 import matplotlib.pyplot as plt
-from tifffile import imread
 
 def load_orthophoto(path):
     # Read the tif file
-    ortho_img = imread(path)
+    ortho_img =  cv2.imread(path)
 
-    ortho_img = cv2.cvtColor(ortho_img, cv2.COLOR_BGR2RGB)
+    #ortho_img = cv2.cvtColor(ortho_img, cv2.COLOR_BGR2RGB)
     return ortho_img
 
 def display_image(img, cmap=None, figsize=(10,10)):

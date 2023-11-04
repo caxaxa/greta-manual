@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 import rasterio
-from osgeo import gdal
 
+#enable for diyplaying and debugging
 
 
 def remove_large_horizontal_segments(matrix):
@@ -62,21 +62,24 @@ def remove_large_horizontal_segments(matrix):
 
     return output_matrix
 
-def create_masks_from_orthophoto(img):
+def create_masks_from_orthophoto(img, debug =  False):
 
     ortho_img_HSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-    # Blue and Red HSV ranges (you'll need to adjust these values for the HSV space)
+    # Blue and Red HSV ranges 
     blue_lower = np.array([110, 110, 100])
     blue_upper = np.array([140, 255, 255])
-    red_lower = np.array([2, 100, 100])
-    red_upper = np.array([20, 255, 255])
+    red_lower = np.array([0, 100, 100])
+    red_upper = np.array([50, 255, 255])
 
 
     # Create masks for blue and red colors
     # red mask treated trhough HSV, blue mask not
     blue_mask = cv2.inRange(ortho_img_HSV, blue_lower, blue_upper)
     red_mask = cv2.inRange(ortho_img_HSV, red_lower, red_upper)
+
+    print(f'Created bluemask with shape {blue_mask.shape} and values {np.unique(blue_mask)}')
+    print(f'Created redmask with shape {red_mask.shape} and values {np.unique(red_mask)}')
 
     # Create a black image with the same size as the mask images
 
@@ -93,9 +96,19 @@ def create_masks_from_orthophoto(img):
     blue_mask = cv2.dilate(blue_mask, kernel_blue, iterations=1)
     red_mask = cv2.dilate(red_mask, kernel_red, iterations=1)
 
-    # Your blue_mask and red_mask variables here
+    if debug:
+        import matplotlib.pyplot as plt
+        def display_image(img, cmap=None, figsize=(10,10)):
+            plt.figure(figsize=figsize)
+            plt.imshow(img, cmap=cmap)
+            plt.axis('off')
+            plt.show()
+        display_image(blue_mask)
+        display_image(red_mask)
 
 
+    print('Finding upper and lower bounds')
+    # Get shapes and set initial variables to calculate bounds
     (rows, cols) = blue_mask.shape
     upper_bound = 0
     lower_bound = rows - 1
@@ -117,6 +130,8 @@ def create_masks_from_orthophoto(img):
 
     zero_row_found = False  # Reset flag for lower bound search
 
+    print(f'found upperbound at pixel {upper_bound} ')
+
     # Find the lower bound
     for i in range(rows - 1, -1, -1):
         row = blue_mask[i, :]
@@ -129,8 +144,10 @@ def create_masks_from_orthophoto(img):
         if zero_row_found and np.count_nonzero(row) > 0.1 * cols:
             lower_bound = i
             break
-    tolerance = 0.2  # If picture is too much blueish use higher value --> 23%
 
+    print(f'found upperbound at pixel {lower_bound} ')   
+        
+    tolerance = 0.2  # If picture is too much blueish use higher value --> 23%
     # Draw horizontal lines between upper_bound and lower_bound where applicable
     for i in range(rows):
         row = blue_mask[i, :]
@@ -175,7 +192,22 @@ def create_masks_from_orthophoto(img):
 
     blue_mask = closed
 
+    print('Blue Mask Processed')
+    print('Red Mask Processed')
+
+    if debug:
+        display_image(blue_mask)
+        display_image(red_mask)
+
     new_mask = remove_large_horizontal_segments(blue_mask)
+
+    print('Trackers defined for the Blue Mask')
+
+    #display bluemask for debuggig
+
+    if debug:
+        display_image(new_mask)
+
 
 
     # Assume red_mask is your binary mask image with values 0 and 255
@@ -216,36 +248,39 @@ def create_masks_from_orthophoto(img):
     # Now, 'output' contains your final image with filled circles
     red_mask = output
 
+    print('Hotspots defined for the Red Mask')
+
+    if debug:
+        display_image(red_mask)
 
     return new_mask , red_mask
-
+        
 
 def generate_affected_panels_coordinates(tif_path, blue_mask, red_mask):
     def detect_contours(mask):
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         return contours
 
-    tif_dataset = gdal.Open(tif_path)
-    geotransform = tif_dataset.GetGeoTransform()
+    with rasterio.open(tif_path) as dataset:
+        transform = dataset.transform  # Get the transformation matrix
     affected_panels_coordinate = {}
-    used_hotspots = set()
     trackers = detect_contours(blue_mask)
     trackers = sorted(trackers, key=lambda c: cv2.boundingRect(c)[0])
     hotspots = detect_contours(red_mask)
+    used_hotspots = set()
 
     def _convert_to_geo_coordinates(contour, x_offset=0, y_offset=0):
-        return [((pt[0][0] + x_offset) * geotransform[1] + geotransform[0],
-                (pt[0][1] + y_offset) * geotransform[5] + geotransform[3]) for pt in contour]
+        return [((pt[0][0] + x_offset) * transform[0] + transform[2],
+                (pt[0][1] + y_offset) * transform[4] + transform[5]) for pt in contour]
 
     def is_panel_affected(panel, hotspots, tracker):
         x, y, w, h = cv2.boundingRect(tracker)
         test_panel = np.array([((pt[0][0] + x), (pt[0][1] + y)) for pt in panel])
-        offsets = [(0, 0), (5, 0), (-5, 0), (0, 3), (0, -3)]
+        offsets = [(0, 0), (5, 0), (5, 0), (0, 3), (0, 3)]
         for hotspot_idx, hotspot in enumerate(hotspots):
             # Check if hotspot has already been used
             if hotspot_idx in used_hotspots:
                 continue
-
             M = cv2.moments(hotspot)
             if M["m00"] != 0:
                 cx = int(M["m10"] / M["m00"])
@@ -256,18 +291,15 @@ def generate_affected_panels_coordinates(tif_path, blue_mask, red_mask):
                         return True
         return False
 
-
     for idx, tracker in enumerate(trackers):
         x, y, w, h = cv2.boundingRect(tracker)
         tracker_roi = blue_mask[y:y+h, x:x+w]
         inverted_tracker_roi = cv2.bitwise_not(tracker_roi)
         panels = detect_contours(inverted_tracker_roi)
         panels = sorted(panels, key=lambda c: cv2.boundingRect(c)[1])
-
         for panel_jdx, panel in enumerate(panels):
             panel_geo_contour = _convert_to_geo_coordinates(panel, x, y)
             label = f"{idx+1}-{panel_jdx+1}"
-
             if is_panel_affected(panel, hotspots, tracker):
                 center_x = sum(pt[0] for pt in panel_geo_contour) / len(panel_geo_contour)
                 center_y = sum(pt[1] for pt in panel_geo_contour) / len(panel_geo_contour)

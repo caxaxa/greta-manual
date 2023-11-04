@@ -3,6 +3,48 @@ from PIL.ExifTags import TAGS, GPSTAGS
 import os
 import shutil
 import math
+import glob
+
+def is_image_facing_north(current_image_name, folder_path):
+    current_image_number = int(current_image_name.split("_")[2])
+    
+    if current_image_number == 1:
+        next_image_number = current_image_number + 1
+        next_image_pattern = f"DJI_*{next_image_number:04}_MASKED.jpg"
+        matching_files = glob.glob(os.path.join(folder_path, next_image_pattern))
+        if not matching_files:
+            return False
+        next_image_name = matching_files[0]
+        current_image_path = os.path.join(folder_path, current_image_name)
+        next_image_path = os.path.join(folder_path, next_image_name)
+
+        _ , current_image_latitude = get_lat_lon_from_exif(current_image_path)
+        _ , next_image_latitude = get_lat_lon_from_exif(next_image_path)
+
+        if not current_image_latitude or not next_image_latitude:
+            return False
+
+        return current_image_latitude < next_image_latitude
+
+    else:
+        previous_image_number = current_image_number - 1
+        previous_image_pattern = f"DJI_*{previous_image_number:04}_MASKED.jpg"
+        matching_files = glob.glob(os.path.join(folder_path, previous_image_pattern))
+        if not matching_files:
+            return False
+        previous_image_name = matching_files[0]
+        current_image_path = os.path.join(folder_path, current_image_name)
+        previous_image_path = os.path.join(folder_path, previous_image_name)
+
+        _ , current_image_latitude = get_lat_lon_from_exif(current_image_path)
+        _ , previous_image_latitude = get_lat_lon_from_exif(previous_image_path)
+
+        if not current_image_latitude or not previous_image_latitude:
+            return False
+
+        return previous_image_latitude < current_image_latitude
+
+
 
 # Convert degree, minute, second to decimal format
 def dms_to_decimal(dms, ref):
@@ -63,9 +105,12 @@ def get_nearest_image(coord, directory):
     return nearest_image
 
 # Main function to process the dataframe and determine the nearest image
-def locate_images_with_affected_panels(df):
+def locate_images_with_affected_panels(df,current_dir):
     images_dir = os.path.join(os.getcwd(), "Inputs", "images")
     df['Nome das Imagens'] = df['Coordenadas Geográficas'].apply(lambda x: get_nearest_image(x, images_dir))
+    folder_path = os.path.join(current_dir, "Inputs", "images")
+    # Apply the is_image_facing_north function
+    df['Facing North'] = df['Nome das Imagens'].apply(lambda x: is_image_facing_north(x, folder_path))
     return df
 
 # Function to copy the relevant images to the report directory
@@ -107,5 +152,4 @@ def copy_images(df):
     shutil.copy(overlap, dst_images)
     shutil.copy(residual, dst_images)
     shutil.copy(stats, dst_images)
-
 
