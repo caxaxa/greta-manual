@@ -1,0 +1,1000 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.9) (preloaded format=pdflatex 2023.10.8)  17 MAR 2025 15:14
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**./report.tex
+(report.tex
+LaTeX2e <2023-06-01> patch level 1
+L3 programming layer <2023-08-29>
+(D:\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
+(D:\MiKTeX\tex/latex/base\size10.clo
+File: size10.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count185
+\c@section=\count186
+\c@subsection=\count187
+\c@subsubsection=\count188
+\c@paragraph=\count189
+\c@subparagraph=\count190
+\c@figure=\count191
+\c@table=\count192
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+) (D:\MiKTeX\tex/latex/base\fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+)
+(D:\MiKTeX\tex/latex/base\inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks17
+\inpenc@posthook=\toks18
+) (D:\MiKTeX\tex/latex/lm\lmodern.sty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
+)
+(D:\MiKTeX\tex/latex/base\textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+)
+(D:\MiKTeX\tex/latex/lastpage\lastpage.sty
+Package: lastpage 2023/10/06 v2.0d lastpage: 2.09 or 2e? (HMM)
+
+(D:\MiKTeX\tex/latex/lastpage\lastpage2e.sty
+Package: lastpage2e 2023/10/06 v2.0d Decide which 2e lastpage version to use (H
+MM)
+
+(D:\MiKTeX\tex/latex/lastpage\lastpagemodern.sty
+Package: lastpagemodern 2023-10-06 v2.0d Refers to last page's name (HMM; JPG)
+\c@lastpagecount=\count193
+) 
+)) (D:\MiKTeX\tex/latex/geometry\geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(D:\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks19
+)
+(D:\MiKTeX\tex/generic/iftex\ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+ (D:\MiKTeX\tex/generic/iftex\iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+))
+\Gm@cnth=\count194
+\Gm@cntv=\count195
+\c@Gm@tempcnt=\count196
+\Gm@bindingoffset=\dimen141
+\Gm@wd@mp=\dimen142
+\Gm@odd@mp=\dimen143
+\Gm@even@mp=\dimen144
+\Gm@layoutwidth=\dimen145
+\Gm@layoutheight=\dimen146
+\Gm@layouthoffset=\dimen147
+\Gm@layoutvoffset=\dimen148
+\Gm@dimlist=\toks20
+ (D:\MiKTeX\tex/latex/geometry\geometry.cfg))
+(D:\MiKTeX\tex/latex/graphics\graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(D:\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+
+(D:\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(D:\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+
+(D:\MiKTeX\tex/latex/graphics-def\pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen149
+\Gin@req@width=\dimen150
+)
+(D:\MiKTeX\tex/latex/placeins\placeins.sty
+Package: placeins 2005/04/18  v 2.2
+) (D:\MiKTeX\tex/latex/tools\calc.sty
+Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count197
+\calc@Bcount=\count198
+\calc@Adimen=\dimen151
+\calc@Bdimen=\dimen152
+\calc@Askip=\skip50
+\calc@Bskip=\skip51
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count199
+\calc@Cskip=\skip52
+) (D:\MiKTeX\tex/latex/pgf/frontendlayer\tikz.sty
+(D:\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
+(D:\MiKTeX\tex/latex/pgf/utilities\pgfrcs.sty
+(D:\MiKTeX\tex/generic/pgf/utilities\pgfutil-common.tex
+\pgfutil@everybye=\toks21
+\pgfutil@tempdima=\dimen153
+\pgfutil@tempdimb=\dimen154
+)
+(D:\MiKTeX\tex/generic/pgf/utilities\pgfutil-latex.def
+\pgfutil@abb=\box51
+)
+(D:\MiKTeX\tex/generic/pgf/utilities\pgfrcs.code.tex
+(D:\MiKTeX\tex/generic/pgf\pgf.revision.tex)
+Package: pgfrcs 2023-01-15 v3.1.10 (3.1.10)
+))
+Package: pgf 2023-01-15 v3.1.10 (3.1.10)
+
+(D:\MiKTeX\tex/latex/pgf/basiclayer\pgfcore.sty
+(D:\MiKTeX\tex/latex/pgf/systemlayer\pgfsys.sty
+(D:\MiKTeX\tex/generic/pgf/systemlayer\pgfsys.code.tex
+Package: pgfsys 2023-01-15 v3.1.10 (3.1.10)
+
+(D:\MiKTeX\tex/generic/pgf/utilities\pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks22
+\pgfkeys@temptoks=\toks23
+
+(D:\MiKTeX\tex/generic/pgf/utilities\pgfkeyslibraryfiltered.code.tex
+\pgfkeys@tmptoks=\toks24
+))
+\pgf@x=\dimen155
+\pgf@y=\dimen156
+\pgf@xa=\dimen157
+\pgf@ya=\dimen158
+\pgf@xb=\dimen159
+\pgf@yb=\dimen160
+\pgf@xc=\dimen161
+\pgf@yc=\dimen162
+\pgf@xd=\dimen163
+\pgf@yd=\dimen164
+\w@pgf@writea=\write3
+\r@pgf@reada=\read2
+\c@pgf@counta=\count266
+\c@pgf@countb=\count267
+\c@pgf@countc=\count268
+\c@pgf@countd=\count269
+\t@pgf@toka=\toks25
+\t@pgf@tokb=\toks26
+\t@pgf@tokc=\toks27
+\pgf@sys@id@count=\count270
+
+(D:\MiKTeX\tex/generic/pgf/systemlayer\pgf.cfg
+File: pgf.cfg 2023-01-15 v3.1.10 (3.1.10)
+)
+Driver file for pgf: pgfsys-pdftex.def
+
+(D:\MiKTeX\tex/generic/pgf/systemlayer\pgfsys-pdftex.def
+File: pgfsys-pdftex.def 2023-01-15 v3.1.10 (3.1.10)
+
+(D:\MiKTeX\tex/generic/pgf/systemlayer\pgfsys-common-pdf.def
+File: pgfsys-common-pdf.def 2023-01-15 v3.1.10 (3.1.10)
+)))
+(D:\MiKTeX\tex/generic/pgf/systemlayer\pgfsyssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfsyssoftpath@smallbuffer@items=\count271
+\pgfsyssoftpath@bigbuffer@items=\count272
+)
+(D:\MiKTeX\tex/generic/pgf/systemlayer\pgfsysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2023-01-15 v3.1.10 (3.1.10)
+))
+(D:\MiKTeX\tex/latex/xcolor\xcolor.sty
+Package: xcolor 2022/06/12 v2.14 LaTeX color extensions (UK)
+
+(D:\MiKTeX\tex/latex/graphics-cfg\color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 227.
+
+(D:\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1353.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1357.
+Package xcolor Info: Model `RGB' extended on input line 1369.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1371.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1372.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1373.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1374.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1375.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1376.
+
+(D:\MiKTeX\tex/latex/graphics\dvipsnam.def
+File: dvipsnam.def 2016/06/17 v3.0m Driver-dependent file (DPC,SPQR)
+))
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcore.code.tex
+Package: pgfcore 2023-01-15 v3.1.10 (3.1.10)
+
+(D:\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathutil.code.tex)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathparser.code.tex
+\pgfmath@dimen=\dimen165
+\pgfmath@count=\count273
+\pgfmath@box=\box52
+\pgfmath@toks=\toks28
+\pgfmath@stack@operand=\toks29
+\pgfmath@stack@operation=\toks30
+)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.code.tex)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.basic.code.tex)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.trigonometric.code.tex)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.random.code.tex)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.comparison.code.tex)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.base.code.tex)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.round.code.tex)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.misc.code.tex)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.integerarithmetics.code.tex)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathcalc.code.tex)
+(D:\MiKTeX\tex/generic/pgf/math\pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count274
+))
+(D:\MiKTeX\tex/generic/pgf/math\pgfint.code.tex)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepoints.code.tex
+File: pgfcorepoints.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@picminx=\dimen166
+\pgf@picmaxx=\dimen167
+\pgf@picminy=\dimen168
+\pgf@picmaxy=\dimen169
+\pgf@pathminx=\dimen170
+\pgf@pathmaxx=\dimen171
+\pgf@pathminy=\dimen172
+\pgf@pathmaxy=\dimen173
+\pgf@xx=\dimen174
+\pgf@xy=\dimen175
+\pgf@yx=\dimen176
+\pgf@yy=\dimen177
+\pgf@zx=\dimen178
+\pgf@zy=\dimen179
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@path@lastx=\dimen180
+\pgf@path@lasty=\dimen181
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathusage.code.tex
+File: pgfcorepathusage.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@shorten@end@additional=\dimen182
+\pgf@shorten@start@additional=\dimen183
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcorescopes.code.tex
+File: pgfcorescopes.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfpic=\box53
+\pgf@hbox=\box54
+\pgf@layerbox@main=\box55
+\pgf@picture@serial@count=\count275
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcoregraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgflinewidth=\dimen184
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcoretransformations.code.tex
+File: pgfcoretransformations.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@pt@x=\dimen185
+\pgf@pt@y=\dimen186
+\pgf@pt@temp=\dimen187
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreobjects.code.tex
+File: pgfcoreobjects.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcorearrows.code.tex
+File: pgfcorearrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfarrowsep=\dimen188
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@max=\dimen189
+\pgf@sys@shading@range@num=\count276
+\pgf@shadingcount=\count277
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreexternal.code.tex
+File: pgfcoreexternal.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfexternal@startupbox=\box56
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcorelayers.code.tex
+File: pgfcorelayers.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcoretransparency.code.tex
+File: pgfcoretransparency.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepatterns.code.tex
+File: pgfcorepatterns.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)
+(D:\MiKTeX\tex/generic/pgf/basiclayer\pgfcorerdf.code.tex
+File: pgfcorerdf.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)))
+(D:\MiKTeX\tex/generic/pgf/modules\pgfmoduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfnodeparttextbox=\box57
+)
+(D:\MiKTeX\tex/generic/pgf/modules\pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)
+(D:\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-0-65.sty
+Package: pgfcomp-version-0-65 2023-01-15 v3.1.10 (3.1.10)
+\pgf@nodesepstart=\dimen190
+\pgf@nodesepend=\dimen191
+)
+(D:\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-1-18.sty
+Package: pgfcomp-version-1-18 2023-01-15 v3.1.10 (3.1.10)
+))
+(D:\MiKTeX\tex/latex/pgf/utilities\pgffor.sty
+(D:\MiKTeX\tex/latex/pgf/utilities\pgfkeys.sty
+(D:\MiKTeX\tex/generic/pgf/utilities\pgfkeys.code.tex))
+(D:\MiKTeX\tex/latex/pgf/math\pgfmath.sty
+(D:\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex))
+(D:\MiKTeX\tex/generic/pgf/utilities\pgffor.code.tex
+Package: pgffor 2023-01-15 v3.1.10 (3.1.10)
+\pgffor@iter=\dimen192
+\pgffor@skip=\dimen193
+\pgffor@stack=\toks31
+\pgffor@toks=\toks32
+))
+(D:\MiKTeX\tex/generic/pgf/frontendlayer/tikz\tikz.code.tex
+Package: tikz 2023-01-15 v3.1.10 (3.1.10)
+
+(D:\MiKTeX\tex/generic/pgf/libraries\pgflibraryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@plot@mark@count=\count278
+\pgfplotmarksize=\dimen194
+)
+\tikz@lastx=\dimen195
+\tikz@lasty=\dimen196
+\tikz@lastxsaved=\dimen197
+\tikz@lastysaved=\dimen198
+\tikz@lastmovetox=\dimen199
+\tikz@lastmovetoy=\dimen256
+\tikzleveldistance=\dimen257
+\tikzsiblingdistance=\dimen258
+\tikz@figbox=\box58
+\tikz@figbox@bg=\box59
+\tikz@tempbox=\box60
+\tikz@tempbox@bg=\box61
+\tikztreelevel=\count279
+\tikznumberofchildren=\count280
+\tikznumberofcurrentchild=\count281
+\tikz@fig@count=\count282
+
+(D:\MiKTeX\tex/generic/pgf/modules\pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfmatrixcurrentrow=\count283
+\pgfmatrixcurrentcolumn=\count284
+\pgf@matrix@numberofcolumns=\count285
+)
+\tikz@expandcount=\count286
+
+(D:\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibrarytopaths.code
+.tex
+File: tikzlibrarytopaths.code.tex 2023-01-15 v3.1.10 (3.1.10)
+))) (D:\MiKTeX\tex/latex/fancyhdr\fancyhdr.sty
+Package: fancyhdr 2022/11/09 v4.1 Extensive control of page headers and footers
+
+\f@nch@headwidth=\skip53
+\f@nch@O@elh=\skip54
+\f@nch@O@erh=\skip55
+\f@nch@O@olh=\skip56
+\f@nch@O@orh=\skip57
+\f@nch@O@elf=\skip58
+\f@nch@O@erf=\skip59
+\f@nch@O@olf=\skip60
+\f@nch@O@orf=\skip61
+)
+(D:\MiKTeX\tex/latex/booktabs\booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen259
+\lightrulewidth=\dimen260
+\cmidrulewidth=\dimen261
+\belowrulesep=\dimen262
+\belowbottomsep=\dimen263
+\aboverulesep=\dimen264
+\abovetopsep=\dimen265
+\cmidrulesep=\dimen266
+\cmidrulekern=\dimen267
+\defaultaddspace=\dimen268
+\@cmidla=\count287
+\@cmidlb=\count288
+\@aboverulesep=\dimen269
+\@belowrulesep=\dimen270
+\@thisruleclass=\count289
+\@lastruleclass=\count290
+\@thisrulewidth=\dimen271
+)
+(D:\MiKTeX\tex/generic/babel\babel.sty
+Package: babel 2023/08/29 v3.93 The Babel package
+\babel@savecnt=\count291
+\U@D=\dimen272
+\l@unhyphenated=\language79
+
+(D:\MiKTeX\tex/generic/babel\txtbabel.def)
+\bbl@readstream=\read3
+\bbl@dirlevel=\count292
+
+*************************************
+* Local config file bblopts.cfg used
+*
+(D:\MiKTeX\tex/latex/arabi\bblopts.cfg
+File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of
+ babel
+)
+(D:\MiKTeX\tex/latex/babel-portuges\brazil.ldf
+Language: portuges 2021/07/09 v1.2t Portuguese support from the babel system
+Package babel Info: Hyphen rules for 'brazil' set to \l@portuguese
+(babel)             (\language56). Reported on input line 111.
+Package babel Info: Making " an active character on input line 143.
+))
+(D:\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibrarycalc.code.te
+x
+File: tikzlibrarycalc.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 26
+.
+ (D:\MiKTeX\tex/latex/lm\t1lmr.fd
+File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+(D:\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
+File: l3backend-pdftex.def 2023-04-19 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count293
+\l__pdf_internal_box=\box62
+) (report.aux)
+\openout1 = `report.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(92.14519pt, 430.00462pt, 92.14519pt)
+* v-part:(T,H,B)=(113.81102pt, 585.7616pt, 95.39737pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=430.00462pt
+* \textheight=585.7616pt
+* \oddsidemargin=19.8752pt
+* \evensidemargin=19.8752pt
+* \topmargin=-55.81723pt
+* \headheight=12.0pt
+* \headsep=85.35826pt
+* \topskip=10.0pt
+* \footskip=28.45274pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+(D:\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count294
+\scratchdimen=\dimen273
+\scratchbox=\box63
+\nofMPsegments=\count295
+\nofMParguments=\count296
+\everyMPshowfont=\toks33
+\MPscratchCnt=\count297
+\MPscratchDim=\dimen274
+\MPnumerator=\count298
+\makeMPintoPDFobject=\count299
+\everyMPtoPDFconversion=\toks34
+) (D:\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+
+(D:\MiKTeX\tex/generic/infwarerr\infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+(D:\MiKTeX\tex/latex/grfext\grfext.sty
+Package: grfext 2019/12/03 v1.3 Manage graphics extensions (HO)
+
+(D:\MiKTeX\tex/generic/kvdefinekeys\kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+))
+(D:\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+
+(D:\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
+Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
+)
+(D:\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+))
+(D:\MiKTeX\tex/generic/pdftexcmds\pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 504.
+
+(D:\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+Underfull \hbox (badness 6316) in paragraph at lines 107--108
+ [][][] \T1/lmr/bx/n/25 Área
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 108--110
+ []\T1/lmr/bx/n/25 1[]
+ []
+
+<report_images/logo_2.png, id=20, 611.886pt x 141.52875pt>
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 128.
+(pdftex.def)             Requested size: 245.71425pt x 56.83292pt.
+[1
+
+{C:/Users/lucas/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{D:/MiKTeX/fon
+ts/enc/dvips/lm/lm-ec.enc} <./report_images/logo_2.png>]
+Overfull \hbox (15.0pt too wide) in paragraph at lines 135--136
+[][] 
+ []
+
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
+44.
+(D:\MiKTeX\tex/latex/lm\ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [2{D:/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}] (report.toc)
+\tf@toc=\write4
+\openout4 = `report.toc'.
+
+ [3]
+Underfull \hbox (badness 10000) in paragraph at lines 173--178
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 173--178
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 173--178
+
+ []
+
+<report_images/ortho.png, id=39, 1684.2925pt x 2951.025pt>
+File: report_images/ortho.png Graphic file (type png)
+<use report_images/ortho.png>
+Package pdftex.def Info: report_images/ortho.png  used on input line 187.
+(pdftex.def)             Requested size: 344.005pt x 602.7126pt.
+
+LaTeX Warning: Float too large for page by 40.89543pt on input line 189.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 192.
+(pdftex.def)             Requested size: 61.43324pt x 14.20769pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 17.80772pt, for example:
+(fancyhdr)                \setlength{\headheight}{17.80772pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-5.80772pt}.
+
+[4]
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 192.
+(pdftex.def)             Requested size: 61.43324pt x 14.20769pt.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 17.80772pt, for example:
+(fancyhdr)                \setlength{\headheight}{17.80772pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-5.80772pt}.
+
+[5 <./report_images/ortho.png (PNG copy)>]
+<report_images/layer_img.png, id=48, 6738.17375pt x 11805.10374pt>
+File: report_images/layer_img.png Graphic file (type png)
+<use report_images/layer_img.png>
+Package pdftex.def Info: report_images/layer_img.png  used on input line 197.
+(pdftex.def)             Requested size: 344.005pt x 602.5387pt.
+
+
+LaTeX Warning: Float too large for page by 40.72153pt on input line 199.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 202.
+(pdftex.def)             Requested size: 61.43324pt x 14.20769pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 17.80772pt, for example:
+(fancyhdr)                \setlength{\headheight}{17.80772pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-5.80772pt}.
+
+[6 <./report_images/layer_img.png (PNG copy)>]
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 2
+07.
+
+(D:\MiKTeX\tex/latex/lm\ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2
+07.
+ (D:\MiKTeX\tex/latex/lm\omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
+207.
+
+(D:\MiKTeX\tex/latex/lm\omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
+207.
+ (D:\MiKTeX\tex/latex/lm\omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 207.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 207.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 207.
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 222.
+(pdftex.def)             Requested size: 61.43324pt x 14.20769pt.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 17.80772pt, for example:
+(fancyhdr)                \setlength{\headheight}{17.80772pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-5.80772pt}.
+
+[7
+
+
+]
+<report_images/hotspots_13-20_map.jpg, id=56, 6738.17375pt x 11805.10374pt>
+File: report_images/hotspots_13-20_map.jpg Graphic file (type jpg)
+<use report_images/hotspots_13-20_map.jpg>
+Package pdftex.def Info: report_images/hotspots_13-20_map.jpg  used on input li
+ne 230.
+(pdftex.def)             Requested size: 133.30037pt x 233.44997pt.
+<report_images/hotspots_13-20_cropped.jpg, id=57, 636.3775pt x 636.3775pt>
+File: report_images/hotspots_13-20_cropped.jpg Graphic file (type jpg)
+<use report_images/hotspots_13-20_cropped.jpg>
+Package pdftex.def Info: report_images/hotspots_13-20_cropped.jpg  used on inpu
+t line 237.
+(pdftex.def)             Requested size: 133.30037pt x 133.29364pt.
+<report_images/hotspots_13-20.jpg, id=58, 642.4pt x 513.92pt>
+File: report_images/hotspots_13-20.jpg Graphic file (type jpg)
+<use report_images/hotspots_13-20.jpg>
+Package pdftex.def Info: report_images/hotspots_13-20.jpg  used on input line 2
+44.
+(pdftex.def)             Requested size: 133.30037pt x 106.64032pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 251--253
+
+ []
+
+<report_images/hotspots_13-10_map.jpg, id=59, 6738.17375pt x 11805.10374pt>
+File: report_images/hotspots_13-10_map.jpg Graphic file (type jpg)
+<use report_images/hotspots_13-10_map.jpg>
+Package pdftex.def Info: report_images/hotspots_13-10_map.jpg  used on input li
+ne 259.
+(pdftex.def)             Requested size: 133.30037pt x 233.44997pt.
+<report_images/hotspots_13-10_cropped.jpg, id=60, 636.3775pt x 636.3775pt>
+File: report_images/hotspots_13-10_cropped.jpg Graphic file (type jpg)
+<use report_images/hotspots_13-10_cropped.jpg>
+Package pdftex.def Info: report_images/hotspots_13-10_cropped.jpg  used on inpu
+t line 266.
+(pdftex.def)             Requested size: 133.30037pt x 133.29364pt.
+<report_images/hotspots_13-10.jpg, id=61, 642.4pt x 513.92pt>
+File: report_images/hotspots_13-10.jpg Graphic file (type jpg)
+<use report_images/hotspots_13-10.jpg>
+Package pdftex.def Info: report_images/hotspots_13-10.jpg  used on input line 2
+73.
+(pdftex.def)             Requested size: 133.30037pt x 106.64032pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 279.
+(pdftex.def)             Requested size: 61.43324pt x 14.20769pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 17.80772pt, for example:
+(fancyhdr)                \setlength{\headheight}{17.80772pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-5.80772pt}.
+
+[8 <./report_images/hotspots_13-20_map.jpg> <./report_images/hotspots_13-20_cro
+pped.jpg> <./report_images/hotspots_13-20.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 280--282
+
+ []
+
+<report_images/hotspots_10-53_map.jpg, id=65, 6738.17375pt x 11805.10374pt>
+File: report_images/hotspots_10-53_map.jpg Graphic file (type jpg)
+<use report_images/hotspots_10-53_map.jpg>
+Package pdftex.def Info: report_images/hotspots_10-53_map.jpg  used on input li
+ne 288.
+(pdftex.def)             Requested size: 133.30037pt x 233.44997pt.
+<report_images/hotspots_10-53_cropped.jpg, id=66, 636.3775pt x 636.3775pt>
+File: report_images/hotspots_10-53_cropped.jpg Graphic file (type jpg)
+<use report_images/hotspots_10-53_cropped.jpg>
+Package pdftex.def Info: report_images/hotspots_10-53_cropped.jpg  used on inpu
+t line 295.
+(pdftex.def)             Requested size: 133.30037pt x 133.29364pt.
+<report_images/hotspots_10-53.jpg, id=67, 642.4pt x 513.92pt>
+File: report_images/hotspots_10-53.jpg Graphic file (type jpg)
+<use report_images/hotspots_10-53.jpg>
+Package pdftex.def Info: report_images/hotspots_10-53.jpg  used on input line 3
+02.
+(pdftex.def)             Requested size: 133.30037pt x 106.64032pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 308.
+(pdftex.def)             Requested size: 61.43324pt x 14.20769pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 17.80772pt, for example:
+(fancyhdr)                \setlength{\headheight}{17.80772pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-5.80772pt}.
+
+[9 <./report_images/hotspots_13-10_map.jpg> <./report_images/hotspots_13-10_cro
+pped.jpg> <./report_images/hotspots_13-10.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 309--311
+
+ []
+
+<report_images/hotspots_5-110_map.jpg, id=71, 6738.17375pt x 11805.10374pt>
+File: report_images/hotspots_5-110_map.jpg Graphic file (type jpg)
+<use report_images/hotspots_5-110_map.jpg>
+Package pdftex.def Info: report_images/hotspots_5-110_map.jpg  used on input li
+ne 317.
+(pdftex.def)             Requested size: 133.30037pt x 233.44997pt.
+<report_images/hotspots_5-110_cropped.jpg, id=72, 636.3775pt x 636.3775pt>
+File: report_images/hotspots_5-110_cropped.jpg Graphic file (type jpg)
+<use report_images/hotspots_5-110_cropped.jpg>
+Package pdftex.def Info: report_images/hotspots_5-110_cropped.jpg  used on inpu
+t line 324.
+(pdftex.def)             Requested size: 133.30037pt x 133.29364pt.
+<report_images/hotspots_5-110.jpg, id=73, 642.4pt x 513.92pt>
+File: report_images/hotspots_5-110.jpg Graphic file (type jpg)
+<use report_images/hotspots_5-110.jpg>
+Package pdftex.def Info: report_images/hotspots_5-110.jpg  used on input line 3
+31.
+(pdftex.def)             Requested size: 133.30037pt x 106.64032pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 337.
+(pdftex.def)             Requested size: 61.43324pt x 14.20769pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 17.80772pt, for example:
+(fancyhdr)                \setlength{\headheight}{17.80772pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-5.80772pt}.
+
+[10 <./report_images/hotspots_10-53_map.jpg> <./report_images/hotspots_10-53_cr
+opped.jpg> <./report_images/hotspots_10-53.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 338--340
+
+ []
+
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 340.
+(pdftex.def)             Requested size: 61.43324pt x 14.20769pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 17.80772pt, for example:
+(fancyhdr)                \setlength{\headheight}{17.80772pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-5.80772pt}.
+
+[11 <./report_images/hotspots_5-110_map.jpg> <./report_images/hotspots_5-110_cr
+opped.jpg> <./report_images/hotspots_5-110.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 342--344
+
+ []
+
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 344.
+(pdftex.def)             Requested size: 61.43324pt x 14.20769pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 17.80772pt, for example:
+(fancyhdr)                \setlength{\headheight}{17.80772pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-5.80772pt}.
+
+[12]
+<report_images/faultydiodes_6-68_map.jpg, id=83, 6738.17375pt x 11805.10374pt>
+File: report_images/faultydiodes_6-68_map.jpg Graphic file (type jpg)
+<use report_images/faultydiodes_6-68_map.jpg>
+Package pdftex.def Info: report_images/faultydiodes_6-68_map.jpg  used on input
+ line 352.
+(pdftex.def)             Requested size: 133.30037pt x 233.44997pt.
+<report_images/faultydiodes_6-68_cropped.jpg, id=84, 636.3775pt x 636.3775pt>
+File: report_images/faultydiodes_6-68_cropped.jpg Graphic file (type jpg)
+<use report_images/faultydiodes_6-68_cropped.jpg>
+Package pdftex.def Info: report_images/faultydiodes_6-68_cropped.jpg  used on i
+nput line 359.
+(pdftex.def)             Requested size: 133.30037pt x 133.29364pt.
+<report_images/faultydiodes_6-68.jpg, id=85, 642.4pt x 513.92pt>
+File: report_images/faultydiodes_6-68.jpg Graphic file (type jpg)
+<use report_images/faultydiodes_6-68.jpg>
+Package pdftex.def Info: report_images/faultydiodes_6-68.jpg  used on input lin
+e 366.
+(pdftex.def)             Requested size: 133.30037pt x 106.64032pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 373--375
+
+ []
+
+<report_images/faultydiodes_6-26_map.jpg, id=86, 6738.17375pt x 11805.10374pt>
+File: report_images/faultydiodes_6-26_map.jpg Graphic file (type jpg)
+<use report_images/faultydiodes_6-26_map.jpg>
+Package pdftex.def Info: report_images/faultydiodes_6-26_map.jpg  used on input
+ line 381.
+(pdftex.def)             Requested size: 133.30037pt x 233.44997pt.
+<report_images/faultydiodes_6-26_cropped.jpg, id=87, 636.3775pt x 636.3775pt>
+File: report_images/faultydiodes_6-26_cropped.jpg Graphic file (type jpg)
+<use report_images/faultydiodes_6-26_cropped.jpg>
+Package pdftex.def Info: report_images/faultydiodes_6-26_cropped.jpg  used on i
+nput line 388.
+(pdftex.def)             Requested size: 133.30037pt x 133.29364pt.
+<report_images/faultydiodes_6-26.jpg, id=88, 642.4pt x 513.92pt>
+File: report_images/faultydiodes_6-26.jpg Graphic file (type jpg)
+<use report_images/faultydiodes_6-26.jpg>
+Package pdftex.def Info: report_images/faultydiodes_6-26.jpg  used on input lin
+e 395.
+(pdftex.def)             Requested size: 133.30037pt x 106.64032pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 401.
+(pdftex.def)             Requested size: 61.43324pt x 14.20769pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 17.80772pt, for example:
+(fancyhdr)                \setlength{\headheight}{17.80772pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-5.80772pt}.
+
+[13 <./report_images/faultydiodes_6-68_map.jpg> <./report_images/faultydiodes_6
+-68_cropped.jpg> <./report_images/faultydiodes_6-68.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 402--404
+
+ []
+
+File: report_images/logo_2.png Graphic file (type png)
+<use report_images/logo_2.png>
+Package pdftex.def Info: report_images/logo_2.png  used on input line 404.
+(pdftex.def)             Requested size: 61.43324pt x 14.20769pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 17.80772pt, for example:
+(fancyhdr)                \setlength{\headheight}{17.80772pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-5.80772pt}.
+
+[14 <./report_images/faultydiodes_6-26_map.jpg> <./report_images/faultydiodes_6
+-26_cropped.jpg> <./report_images/faultydiodes_6-26.jpg>]
+
+enddocument/afterlastpage: lastpage setting LastPage.
+(report.aux)
+ ***********
+LaTeX2e <2023-06-01> patch level 1
+L3 programming layer <2023-08-29>
+ ***********
+ ) 
+Here is how much of TeX's memory you used:
+ 15184 strings out of 475248
+ 304811 string characters out of 5774228
+ 1927801 words of memory out of 5000000
+ 36400 multiletter control sequences out of 15000+600000
+ 612609 words of font info for 63 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 84i,15n,89p,1248b,694s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<D:/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><D:/MiKTeX/fonts/type1/public/lm/
+lmbx12.pfb><D:/MiKTeX/fonts/type1/public/lm/lmbx9.pfb><D:/MiKTeX/fonts/type1/pu
+blic/lm/lmr10.pfb><D:/MiKTeX/fonts/type1/public/lm/lmr17.pfb><D:/MiKTeX/fonts/t
+ype1/public/lm/lmr9.pfb>
+Output written on report.pdf (14 pages, 32775635 bytes).
+PDF statistics:
+ 128 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 166 words of extra memory for PDF output out of 10000 (max. 10000000)
+
