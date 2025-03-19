@@ -26,3 +26,53 @@ def get_single_file_in_directory(directory_path):
         return files[0]
     else:
         return False
+def flatten_panel_defects_dict(panel_defects_dict):
+    """
+    Convert a panel_defects_dict like:
+      {
+        (1,2): {
+          "bbox": (x,y,w,h),
+          "hotspots": [ { "panel_centroid_geospatial": (...), ... }, ...],
+          "faultydiodes": [...],
+          "offlinepanels": [...]
+        },
+        ...
+      }
+    Into a flat dict:
+      {
+        "1-2_hotspots_1": {
+          "issue_type": "hotspots",
+          "panel_centroid_geospatial": (...),
+          ...
+        },
+        "1-2_hotspots_2": { ... },
+        ...
+      }
+    """
+    flattened = {}
+    defect_types = ["hotspots", "faultydiodes", "offlinepanels"]
+
+    for (col_idx, row_idx), panel_data in panel_defects_dict.items():
+        panel_label = f"{col_idx}-{row_idx}"
+
+        for d_type in defect_types:
+            # This is a list of defect objects for that d_type
+            defects_list = panel_data.get(d_type, [])
+            for i, defect_info in enumerate(defects_list, start=1):
+                # Build a unique key
+                unique_key = f"{panel_label}_{d_type}_{i}"
+
+                # In your data, each defect_info might have keys:
+                #   "panel_centroid_geospatial"
+                #   "bbox"
+                #   ...
+                # But NOT necessarily "issue_type" or "label".
+                # We'll add "issue_type" explicitly here:
+                flattened[unique_key] = {
+                    "issue_type": d_type,
+                    "panel_centroid_geospatial": defect_info.get("panel_centroid_geospatial", (None, None))
+                }
+                # If you want other fields, copy them:
+                # flattened[unique_key]["bbox"] = defect_info.get("bbox")
+                # etc.
+    return flattened

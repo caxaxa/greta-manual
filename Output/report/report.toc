@@ -1,7 +1,0 @@
-\babel@toc {brazil}{}\relax 
-\contentsline {section}{\numberline {1}Introduction}{4}{}%
-\contentsline {section}{\numberline {2}Dados do Cliente}{4}{}%
-\contentsline {section}{\numberline {3}Visão Geral da Área}{4}{}%
-\contentsline {section}{\numberline {4}Pontos Quentes (Hot Spots)}{8}{}%
-\contentsline {section}{\numberline {5}Painéis Desligados}{12}{}%
-\contentsline {section}{\numberline {6}Diodos de Bypass Queimados}{13}{}%

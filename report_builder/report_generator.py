@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 import os
 
-def generate_report(defects_dict, defect_centroids, area_name, current_dir):
+def generate_report(defects_dict, area_name, current_dir):
     """
     Generate a thermographic inspection report for solar power plants.
     The source code is in English, but the client report is in Portuguese.
@@ -15,7 +15,7 @@ def generate_report(defects_dict, defect_centroids, area_name, current_dir):
     orthophoto_path_img = os.path.join(report_images_dir, 'ortho.png')
     aisol_logo_path = os.path.join(report_images_dir, 'aisol_logo.png')
     aisol_logo_2_path = os.path.join(report_images_dir, 'logo_2.png')
-    layer_img_path = os.path.join(report_images_dir, 'layer_img.png')
+    layer_img_path = os.path.join(report_images_dir, 'layer_img.svg')
     top_view = os.path.join(report_images_dir, "topview.png")
     match = os.path.join(report_images_dir, "matchgraph.png")
     overlap = os.path.join(report_images_dir, "overlap.png")
@@ -165,17 +165,22 @@ def generate_report(defects_dict, defect_centroids, area_name, current_dir):
         fig.add_caption("Máscara dos Painéis")
     doc.append(NoEscape(r'\FloatBarrier'))
 
+        # --- Defect Presentation by Issue Type ---
+    expected_types = {
+        "hotspots": "Pontos Quentes (Hot Spots)",
+        "offlinepanels": "Painéis Desligados",
+        "faultydiodes": "Diodos de Bypass Queimados"
+    }
+
+
     # --- Defect Summary Table in academic style ---
     if defects_dict:
-        # Define maximum number of rows per table.
         rows_per_table = 35
-        defects_items = list(defects_dict.items())
+        defects_items = list(defects_dict.items())  # e.g. [("1-2_hotspots_1", {...}), ("1-2_hotspots_2", {...}), ...]
         total_rows = len(defects_items)
         
         for batch_idx in range(0, total_rows, rows_per_table):
-            # Create a new table for each batch of rows.
             with doc.create(pl.Table(position='h!')) as table:
-                # Use a continuation caption for subsequent tables.
                 caption = ("Resumo dos Defeitos Identificados" 
                         if batch_idx == 0 
                         else "Resumo dos Defeitos Identificados (cont.)")
@@ -184,74 +189,107 @@ def generate_report(defects_dict, defect_centroids, area_name, current_dir):
                     tabular.append(NoEscape(r'\toprule'))
                     tabular.add_row(["Tipo de Problema", "Local do Painel", "Coordenadas"], escape=False)
                     tabular.append(NoEscape(r'\midrule'))
-                    # Add rows for the current batch.
-                    for label, defect in defects_items[batch_idx:batch_idx + rows_per_table]:
-                        tabular.add_row([defect["issue_type"], label, str(defect["panel_centroid_geospatial"])])
+                    # Add rows for the current batch
+                    for key, defect in defects_items[batch_idx:batch_idx + rows_per_table]:
+                        # Expect key format: "local_issue_extra" e.g. "1-2_hotspots_1"
+                        parts = key.split("_")
+                        if len(parts) >= 2:
+                            local = parts[0]  # e.g., "1-2"
+                            issue = parts[1].lower()  # e.g., "hotspots"
+                        else:
+                            local = key
+                            issue = defect["issue_type"].lower()
+                        tipo_problema = expected_types.get(issue, issue)
+                        tabular.add_row([tipo_problema, local, str(defect["panel_centroid_geospatial"])])
                     tabular.append(NoEscape(r'\bottomrule'))
-            # Insert a FloatBarrier to ensure tables are rendered in sequence.
             doc.append(NoEscape(r'\FloatBarrier'))
     else:
         doc.append("Nenhum defeito identificado.")
 
 
-    # --- Defect Presentation by Issue Type ---
-    # Define the expected defect types and their corresponding section titles in Portuguese.
-    # Update expected_types to match the new mappings:
-    expected_types = {
-        "hotspots": "Pontos Quentes (Hot Spots)",
-        "offlinepanels": "Painéis Desligados",
-        "faultydiodes": "Diodos de Bypass Queimados"
-    }
 
-    # Group defects by their lowercase issue type if it is one of the expected keys.
-    defects_by_type = {}
-    for label, defect in defects_dict.items():
-        issue = defect["issue_type"].lower()
-        if issue in expected_types:
-            defects_by_type.setdefault(issue, []).append((label, defect))
-
-    # For each expected type, create a section with the corresponding title.
-    for key, section_title in expected_types.items():
-        doc.append(NoEscape(r'\newpage'))
-        doc.append(NoEscape(r'\section{' + section_title + '}'))
-        if key in defects_by_type and defects_by_type[key]:
-            for label, defect in defects_by_type[key]:
-                # Build image paths assuming the naming convention remains the same.
-                defect_image = os.path.join(report_images_dir, f"{defect['issue_type']}_{label}_cropped.jpg")
-                defect_map = os.path.join(report_images_dir, f"{defect['issue_type']}_{label}_map.jpg")
-                drone_img = os.path.join(report_images_dir, f"{defect['issue_type']}_{label}.jpg")
-                
-                with doc.create(pl.Figure(position='h!')) as fig:
-                    fig.append(NoEscape(r'\begin{minipage}{0.31\linewidth}'))
-                    fig.append(NoEscape(r'\centering'))
-                    fig.add_image(defect_map, width=NoEscape(r'\linewidth'))
-                    fig.append(NoEscape(r'\caption{Localização do defeito: ' + label + '}'))
-                    fig.append(NoEscape(r'\end{minipage}%'))
-                    fig.append(NoEscape(r'\hfill'))
-                    fig.append(NoEscape(r'\begin{minipage}{0.31\linewidth}'))
-                    fig.append(NoEscape(r'\centering'))
-                    fig.add_image(defect_image, width=NoEscape(r'\linewidth'))
-                    fig.append(NoEscape(r'\caption{Zoom no defeito: ' + label + '}'))
-                    fig.append(NoEscape(r'\end{minipage}%'))
-                    fig.append(NoEscape(r'\hfill'))
-                    fig.append(NoEscape(r'\begin{minipage}{0.31\linewidth}'))
-                    fig.append(NoEscape(r'\centering'))
-                    fig.add_image(drone_img, width=NoEscape(r'\linewidth'))
-                    fig.append(NoEscape(r'\caption{Imagem Original: ' + label + '}'))
-                    fig.append(NoEscape(r'\end{minipage}'))
-                
-                # Insert a FloatBarrier to ensure figures appear above the following text
-                doc.append(NoEscape(r'\FloatBarrier'))
-                
-                # Descriptive text for each defect type
-                if key == "hotspots":
-                    doc.append(f"No painel {label} há sinais de pontos quentes conforme as figuras acima.\n")
-                elif key == "offlinepanels":
-                    doc.append(f"No painel {label} foram detectadas anomalias indicando painéis desligados conforme as figuras acima.\n")
-                elif key == "faultydiodes":
-                    doc.append(f"No painel {label} foram detectados diodos de bypass queimados conforme as figuras acima.\n")
+    # Group defects by (issue, local) so that each panel appears once per defect type.
+    defects_by_type_local = {}
+    for key, defect in defects_dict.items():
+        parts = key.split("_")
+        if len(parts) >= 2:
+            local = parts[0]         # e.g., "1-2"
+            issue = parts[1].lower()   # e.g., "hotspots"
         else:
-            doc.append(f"As imagens coletadas não detectaram {section_title.lower()} na área inspecionada.\n")
+            local = key
+            issue = defect["issue_type"].lower()
+        defects_by_type_local.setdefault((issue, local), []).append(defect)
+
+        # For each expected issue type, create a section.
+        for issue in expected_types:
+            doc.append(NoEscape(r'\newpage'))
+            section_title = expected_types[issue]
+            doc.append(NoEscape(r'\section{' + section_title + '}'))
+            
+            # Get all groups for this issue type.
+            groups = [(local, defects) for (iss, local), defects in defects_by_type_local.items() if iss == issue]
+            
+            if groups:
+                # Append introductory text for the section.
+                if issue == "hotspots":
+                    intro_text = "Foram detectados pontos quentes nas placas abaixo."
+                elif issue == "offlinepanels":
+                    intro_text = "Foram detectadas anomalias indicando painel(es) desligados nas placas abaixo."
+                elif issue == "faultydiodes":
+                    intro_text = "Foram detectados diodos de bypass queimados nas placas abaixo."
+                else:
+                    intro_text = ""
+                doc.append(intro_text + "\n")
+                
+                # Process each panel group for this issue.
+                for local, defects_list in groups:
+                    # Create a subsubsection for the panel.
+                    doc.append(NoEscape(r'\subsubsection{Painel ' + local + '}'))
+                    
+                    # Parse local string (expected "col-row") into column and row.
+                    try:
+                        col, row = local.split("-")
+                    except Exception:
+                        col, row = "?", "?"
+                    overall_caption = f"Imagens do Painel n. {row} da coluna n. {col}."
+                    
+                    # Build filenames using the naming convention.
+                    # E.g.: hotspots_(1-2)_layer.svg, hotspots_(1-2)_cropped.jpg, hotspots_(1-2).jpg
+                    defect_map  = os.path.join(report_images_dir, f"{issue}_({local})_layer.svg")
+                    defect_crop = os.path.join(report_images_dir, f"{issue}_({local})_cropped.jpg")
+                    drone_img   = os.path.join(report_images_dir, f"{issue}_({local}).jpg")
+                    
+                    # Create a figure using subfloats.
+                    with doc.create(pl.Figure(position='h!')) as fig:
+                        fig.append(NoEscape(r'\centering'))
+                        fig.append(NoEscape(r'\subfloat[Recorte do Painel em Análise]{\includegraphics[width=0.31\linewidth]{' + defect_map + r'}}'))
+                        fig.append(NoEscape(r'\hfill'))
+                        fig.append(NoEscape(r'\subfloat[Localização do Problema]{\includegraphics[width=0.31\linewidth]{' + defect_crop + r'}}'))
+                        fig.append(NoEscape(r'\hfill'))
+                        fig.append(NoEscape(r'\subfloat[Imagem Original do Drone]{\includegraphics[width=0.31\linewidth]{' + drone_img + r'}}'))
+                        fig.append(NoEscape(r'\caption{' + overall_caption + r'}'))
+                    doc.append(NoEscape(r'\FloatBarrier'))
+                            # Add optional descriptive text per defect type.
+                if issue == "hotspots":
+                    doc.append(f"No painel {local}, há sinais de pontos quentes conforme as figuras acima.\n")
+                elif issue == "offlinepanels":
+                    doc.append(f"No painel {local}, foram detectadas anomalias indicando painel(es) desligados.\n")
+                elif issue == "faultydiodes":
+                    doc.append(f"No painel {local}, foram detectados diodos de bypass queimados.\n")
+            else:
+                # No defects found for this issue type.
+                if issue == "hotspots":
+                    doc.append("Não foram encontrados problemas de pontos quentes na área inspecionada.\n")
+                elif issue == "offlinepanels":
+                    doc.append("Não foram encontrados problemas de painéis desligados na área inspecionada.\n")
+                elif issue == "faultydiodes":
+                    doc.append("Não foram encontrados problemas de diodos de bypass queimados na área inspecionada.\n")
+
+
+
+
+
+
 
     # --- Append additional statistics if available ---
     if stats:
