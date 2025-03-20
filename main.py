@@ -1,5 +1,5 @@
-#from image_processing.processing import  json_to_contours_by_label, get_defect_centroids
-from image_processing.image_creation import generate_defect_map, annotate_and_downscale_orthophoto, process_and_rename_images, annotate_and_crop_defect_area 
+
+from image_processing.processing import generate_defect_map, annotate_and_downscale_orthophoto, process_and_rename_images, annotate_and_crop_defect_area 
 from helpers.helpers import load_orthophoto , flatten_panel_defects_dict,sort_key
 from report_builder.report_generator import generate_report
 from report_builder.tex_to_pdf import run_pdflatex
@@ -89,6 +89,11 @@ if __name__ == "__main__":
 
     #stats_file = os.path.join(report_dir,  'report_images' ,'stats.json')
     flatned_panel_defects = flatten_panel_defects_dict(panel_defects) 
+
+    sorted_defects_items = sorted(flatned_panel_defects.items(), key=sort_key)
+
+    flatned_panel_defects = {k: v for k, v in sorted_defects_items}
+
 
     latex_code = generate_report(flatned_panel_defects, 'Área Teste', current_dir)
 
