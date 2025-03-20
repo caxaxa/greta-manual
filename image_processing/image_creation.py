@@ -1,6 +1,7 @@
 
 import numpy as np
 import cv2
+import copy
 import rasterio
 import matplotlib.pyplot as plt
 import json
@@ -10,7 +11,13 @@ import glob
 import exifread
 from PIL import Image
 from rasterio.plot import reshape_as_image
-import svgwrite
+from reportlab.graphics.shapes import Drawing, Rect, Polygon, String
+from reportlab.lib import colors
+from reportlab.graphics import renderPDF
+from reportlab.graphics.shapes import Rect
+
+
+
 
 
 def annotate_and_downscale_orthophoto(
@@ -77,27 +84,27 @@ def annotate_and_downscale_orthophoto(
     print(f"Annotated and downscaled orthophoto saved at {output_path}")
 
 
-
 def generate_defect_map(
     tif_path,
     annotation_json_path,
-    alignment='vertical',
-    output_image="annotated_defects_map.svg",
-    scale_factor=0.25
+    alignment='vertical',  # alignment parameter is no longer used for numbering
+    output_image="annotated_defects_map.pdf"
 ):
     """
     Reads bounding boxes from a JSON annotation file, draws panels and defects 
-    onto a vector (SVG) canvas, and organizes them into a panel-level dictionary.
+    onto a vector PDF canvas using ReportLab, and organizes them into a panel-level dictionary.
     
     In this version:
-      - The final output is an SVG file (vectorized) that can be scaled in LaTeX.
+      - The final output is a PDF file (vectorized) that can be included in LaTeX.
       - Panel areas with any issues are filled with red at 50% opacity.
+      - Panels are numbered so that the TOP-LEFT panel is 1-1. (Note that the JSON and OpenCV
+        use a top-left origin, but ReportLab uses a bottom-left origin, so the y values are transformed.)
     
     Returns:
         panel_defects_dict: Nested dictionary with structure:
           {
               (col, row): {
-                  "bbox": (x, y, w, h),
+                  "bbox": (x, y, w, h),  # drawn coordinates (with y transformed)
                   "hotspots": [ {...}, ...],
                   "faultydiodes": [...],
                   "offlinepanels": [...]
@@ -105,31 +112,36 @@ def generate_defect_map(
               ...
           }
     """
+    import json
+    import cv2
+    import numpy as np
+    from collections import defaultdict
+    import rasterio
+    from reportlab.graphics.shapes import Drawing, Rect, Polygon, String
+    from reportlab.lib import colors
+    from reportlab.graphics import renderPDF
+
     # --- Load image dimensions ---
     with rasterio.open(tif_path) as src:
         transform = src.transform
         img_h, img_w = src.height, src.width
 
-    # --- Set up the SVG drawing ---
-    # The viewBox remains at the original dimensions and the output size is scaled.
-    scaled_w = int(img_w * scale_factor)
-    scaled_h = int(img_h * scale_factor)
-    dwg = svgwrite.Drawing(output_image, size=(f"{scaled_w}px", f"{scaled_h}px"),
-                           viewBox=f"0 0 {img_w} {img_h}")
-    # Add a white background
-    dwg.add(dwg.rect(insert=(0, 0), size=(img_w, img_h), fill="white"))
-    
+    # Create a ReportLab Drawing with the original image dimensions.
+    drawing = Drawing(img_w, img_h)
+    # Add a white background.
+    drawing.add(Rect(0, 0, img_w, img_h, fillColor=colors.white))
+
     # --- Read JSON annotations ---
     with open(annotation_json_path, 'r') as f:
         data = json.load(f)
     
-    # Flatten all bounding boxes from the JSON
+    # Flatten all bounding boxes from the JSON.
     all_bboxes = []
     for item in data:
         if "boundingBox" in item and "boundingBoxes" in item["boundingBox"]:
             all_bboxes.extend(item["boundingBox"]["boundingBoxes"])
     
-    # Separate bounding boxes by label (all lowercase)
+    # Separate bounding boxes by label (all lowercase).
     bboxes_by_label = defaultdict(list)
     for bb in all_bboxes:
         label = bb["label"].lower()
@@ -137,84 +149,80 @@ def generate_defect_map(
         top   = int(bb["top"])
         w     = int(bb["width"])
         h     = int(bb["height"])
-        # Create a 4-point contour
-        contour = np.array([
-            [left, top],
-            [left + w, top],
-            [left + w, top + h],
-            [left, top + h]
-        ], dtype=np.int32)
+        # Create a 4-point contour as a list of tuples.
+        contour = [(left, top),
+                   (left + w, top),
+                   (left + w, top + h),
+                   (left, top + h)]
         bboxes_by_label[label].append(contour)
     
-    # --- Extract panels and "defects" of interest ---
+    # --- Extract panels and defects ---
     default_panels = bboxes_by_label.get("default_panel", [])
-    # These other labels are used later to assign defects to panels:
     hotspots      = bboxes_by_label.get("hotspots", [])
     faultydiodes  = bboxes_by_label.get("faultydiodes", [])
     offlinepanels = bboxes_by_label.get("offlinepanels", [])
     
     # --- Build bounding rectangles for each panel contour ---
-    panel_bboxes = [cv2.boundingRect(cnt) for cnt in default_panels]  # Each is (x, y, w, h)
+    # These are in the original image coordinate system (top-left origin).
+    panel_bboxes = [cv2.boundingRect(np.array(contour, dtype=np.int32))
+                    for contour in default_panels]
     
-    # --- Sort panels into a grid (vertical or horizontal alignment) ---
-    if alignment == 'vertical':
-        panel_bboxes.sort(key=lambda b: (b[0], b[1]))
-        cols = []
-        current_col = [panel_bboxes[0]] if panel_bboxes else []
+    # --- Group panels into rows using original y coordinate (smallest y is top) ---
+    # Sort by y (ascending) then by x.
+    panel_bboxes.sort(key=lambda b: (b[1], b[0]))
+    rows = []
+    if panel_bboxes:
+        current_row = [panel_bboxes[0]]
+        ref_y = panel_bboxes[0][1]
         for box in panel_bboxes[1:]:
-            prev_box = current_col[-1]
-            if abs(box[0] - prev_box[0]) > prev_box[2]:
-                cols.append(current_col)
-                current_col = [box]
+            # If the difference in top values is small (within half the height of the first panel in the row), same row.
+            if abs(box[1] - ref_y) <= current_row[0][3] * 0.5:
+                current_row.append(box)
             else:
-                current_col.append(box)
-        if current_col:
-            cols.append(current_col)
-        panel_grid = {}
-        for col_idx, col in enumerate(cols):
-            col_sorted = sorted(col, key=lambda b: b[1])
-            for row_idx, box in enumerate(col_sorted):
-                panel_grid[(col_idx+1, row_idx+1)] = box
-    elif alignment == 'horizontal':
-        panel_bboxes.sort(key=lambda b: (b[1], b[0]))
-        rows = []
-        current_row = [panel_bboxes[0]] if panel_bboxes else []
-        for box in panel_bboxes[1:]:
-            prev_box = current_row[-1]
-            if abs(box[1] - prev_box[1]) > prev_box[3]:
                 rows.append(current_row)
                 current_row = [box]
-            else:
-                current_row.append(box)
+                ref_y = box[1]
         if current_row:
             rows.append(current_row)
-        panel_grid = {}
-        for row_idx, row in enumerate(rows):
-            row_sorted = sorted(row, key=lambda b: b[0])
-            for col_idx, box in enumerate(row_sorted):
-                panel_grid[(row_idx+1, col_idx+1)] = box
-    else:
-        raise ValueError("alignment must be 'vertical' or 'horizontal'")
     
-    # --- Build final dictionary: for each panel, store all relevant defects ---
+    # Within each row, sort panels by x (left-to-right).
+    # We'll keep a dictionary of the original boxes for defect assignment and then transform for drawing.
+    panel_grid_orig = {}
+    for row_idx, row in enumerate(rows):
+        row_sorted = sorted(row, key=lambda b: b[0])
+        for col_idx, box in enumerate(row_sorted):
+            # Here, row_idx=0 corresponds to the top row.
+            panel_grid_orig[(col_idx+1, row_idx+1)] = box
+
+    # Now transform each panel's bounding box from original coordinates (top-left origin)
+    # to drawing coordinates (bottom-left origin). For a box (x, y, w, h) in original coords,
+    # the drawing y coordinate becomes: new_y = img_h - y - h.
+    panel_grid_draw = {}
+    for key, box in panel_grid_orig.items():
+        x, y, w, h = box
+        new_y = img_h - y - h
+        panel_grid_draw[key] = (x, new_y, w, h)
+    
+    # --- Build final dictionary for panels using the drawing coordinates ---
     panel_defects_dict = {}
-    for panel_key, panel_box in panel_grid.items():
-        bx, by, bw, bh = panel_box  # boundingRect
+    for panel_key, panel_box in panel_grid_draw.items():
         panel_defects_dict[panel_key] = {
-            "bbox": (bx, by, bw, bh),
+            "bbox": panel_box,
             "hotspots": [],
             "faultydiodes": [],
             "offlinepanels": []
         }
     
-    # --- For each defect, find the nearest panel and add it to that panel’s list ---
+    # --- Assign each defect to the nearest panel ---
+    # For defect assignment, we use the original coordinates.
     for defect_label in ["hotspots", "faultydiodes", "offlinepanels"]:
-        for cnt in bboxes_by_label.get(defect_label, []):
-            x, y, w, h = cv2.boundingRect(cnt)
+        for contour in bboxes_by_label.get(defect_label, []):
+            # Compute bounding rect for defect.
+            x, y, w, h = cv2.boundingRect(np.array(contour, dtype=np.int32))
             defect_center = (x + w/2, y + h/2)
             min_dist = float('inf')
             nearest_panel_key = None
-            for key, box in panel_grid.items():
+            for key, box in panel_grid_orig.items():
                 bx, by, bw, bh = box
                 panel_center = (bx + bw/2, by + bh/2)
                 dist = np.hypot(defect_center[0] - panel_center[0],
@@ -224,9 +232,9 @@ def generate_defect_map(
                     nearest_panel_key = key
             if nearest_panel_key is None:
                 continue
-            # Get geospatial centroid of the panel (if needed)
-            panel_center_px = (panel_grid[nearest_panel_key][0] + panel_grid[nearest_panel_key][2]/2,
-                               panel_grid[nearest_panel_key][1] + panel_grid[nearest_panel_key][3]/2)
+            # Optionally compute geospatial centroid (if needed)
+            panel_center_px = (panel_grid_orig[nearest_panel_key][0] + panel_grid_orig[nearest_panel_key][2] / 2,
+                               panel_grid_orig[nearest_panel_key][1] + panel_grid_orig[nearest_panel_key][3] / 2)
             lon, lat = transform * panel_center_px
             panel_defects_dict[nearest_panel_key][defect_label].append({
                 "bbox": (x, y, w, h),
@@ -236,106 +244,115 @@ def generate_defect_map(
             })
     
     # ---------------------
-    # Draw vector elements into the SVG:
-    # ---------------------
-    
-    # 1) Draw defect contours as filled polygons.
+    # Draw defect contours (filled) onto the drawing.
     defect_colors = {
-        "hotspots": "red",
-        "faultydiodes": "blue",
-        "offlinepanels": "yellow"
+        "hotspots": colors.red,
+        "faultydiodes": colors.blue,
+        "offlinepanels": colors.yellow
     }
     for defect_label, color in defect_colors.items():
-        for cnt in bboxes_by_label.get(defect_label, []):
-            points = [(int(p[0]), int(p[1])) for p in cnt]
-            dwg.add(dwg.polygon(points, fill=color, fill_opacity=1.0, stroke="none"))
+        for contour in bboxes_by_label.get(defect_label, []):
+            # Flatten the list of points into a single list.
+            pts = []
+            for (px, py) in contour:
+                pts.extend([px, py])
+            drawing.add(Polygon(pts, fillColor=color, strokeColor=None))
     
-    # 2) Draw panel outlines. If a panel has any defects, fill with red at 50% opacity; else, no fill.
-    for panel_key, box in panel_grid.items():
-        bx, by, bw, bh = box
-        points = [(bx, by), (bx + bw, by), (bx + bw, by + bh), (bx, by + bh)]
+    # Draw panel outlines (and fill with red if there are defects).
+    for panel_key, box in panel_grid_draw.items():
+        x, y, w, h = box
+        pts = [x, y, x+w, y, x+w, y+h, x, y+h]
         issues_count = (len(panel_defects_dict[panel_key]["hotspots"]) +
                         len(panel_defects_dict[panel_key]["faultydiodes"]) +
                         len(panel_defects_dict[panel_key]["offlinepanels"]))
         if issues_count > 0:
-            fill_color = "red"
-            fill_opacity = 0.5
-            stroke_color = "red"
+            # Use a light red with 50% opacity.
+            fill_color = colors.Color(1, 0, 0, alpha=0.5)
+            stroke_color = colors.red
         else:
-            fill_color = "none"
-            fill_opacity = 0
-            stroke_color = "black"
-        dwg.add(dwg.polygon(points, fill=fill_color, fill_opacity=fill_opacity,
-                            stroke=stroke_color, stroke_width=2))
+            fill_color = None
+            stroke_color = colors.black
+        drawing.add(Polygon(pts, fillColor=fill_color, strokeColor=stroke_color, strokeWidth=2))
     
-    # 3) Label each panel (place text near the top-left).
-    for panel_key, box in panel_grid.items():
-        bx, by, bw, bh = box
-        if alignment == 'vertical':
-            label_str = f"{panel_key[0]}-{panel_key[1]}"
-        else:
-            label_str = f"{panel_key[1]}-{panel_key[0]}"
-        dwg.add(dwg.text(label_str, insert=(bx, max(by - 5, 0)), fill="black", font_size="14px"))
+    # Add labels for each panel.
+    for panel_key, box in panel_grid_draw.items():
+        x, y, w, h = box
+        # Labels are in the format "col-row": top-left becomes 1-1, the panel to its right is 2-1,
+        # and the panel below top-left is 1-2.
+        label_str = f"{panel_key[0]}-{panel_key[1]}"
+        # Place the label just above the panel's top-left corner (remember y is now in drawing coordinates).
+        drawing.add(String(x, y + h + 5, label_str, fontSize=40, fillColor=colors.black))
     
-    # Save the SVG (vector image)
-    dwg.save()
-    print(f"Annotated map saved as vector image to {output_image}")
+    # Save the drawing as a PDF.
+    image_layer_vector = drawing
+    renderPDF.drawToFile(drawing, output_image)
+    print(f"Annotated map saved as vector PDF to {output_image}")
     
-    return panel_defects_dict
-
+    return panel_defects_dict, image_layer_vector
 
 
 
 def annotate_and_crop_defect_area(
     tif_path,
     panel_defects_dict,
-    layer_image_path,
+    image_layer_vector,
     default_panel_width=127,
     crop_panel_size=5,  # in panel units
     output_dir="output_annotations",
     scale_factor=0.5
 ):
     """
-    For each panel in `panel_defects_dict`, and for each defect type
-    (hotspots, faultydiodes, offlinepanels) present in that panel:
-      1. Finds the panel's bounding box,
-      2. Creates an SVG vector "layer" image that shows a copy of the
-         layer_image_path with a blue crop rectangle overlay,
-      3. Creates a copy of the TIFF image that draws *only that defect type*
-         for this panel,
-      4. Crops around the panel center (using crop_panel_size * default_panel_width),
-      5. Downscales and saves the cropped image as a JPEG.
-      
-    The layer image is saved with a filename like:
-         "<defect_type>_(col-row)_layer.svg"
-    and the cropped image is saved as:
-         "<defect_type>_(col-row)_cropped.jpg"
-
+    For each panel in `panel_defects_dict`, and for each defect type present in that panel:
+      1. Determine the panel's bounding box and calculate a crop region (centered on the panel).
+      2. Create a PDF vector layer by copying the provided vector drawing (image_layer_vector)
+         and overlaying a blue rectangle that marks the crop area. The resulting PDF is saved as:
+             "<defect_type>_(col-row)_layer.pdf"
+      3. Annotate a copy of the TIFF image with only that defect type’s contours,
+         crop around the panel center, downscale, and save as a JPEG:
+             "<defect_type>_(col-row)_cropped.jpg"
+         
+    Args:
+        tif_path (str): Path to the TIFF image.
+        panel_defects_dict (dict): Dictionary of panel information and defect lists.
+        image_layer_vector (reportlab.graphics.shapes.Drawing):
+            A ReportLab Drawing (vector) containing the annotated defect map.
+        default_panel_width (int): Default panel width in pixels.
+        crop_panel_size (int): Crop size in units of panel widths.
+        output_dir (str): Directory to save outputs.
+        scale_factor (float): Downscale factor for the cropped JPEG.
+        
     Returns:
-        None. Saves images to `output_dir`.
+        None. Files are saved to `output_dir`.
     """
+
+
     os.makedirs(output_dir, exist_ok=True)
 
     # --- Load the original TIFF as an OpenCV image ---
     with rasterio.open(tif_path) as src:
-        tif_img = reshape_as_image(src.read()).astype(np.uint8)  # (H, W, 3)
-        tif_img = cv2.cvtColor(tif_img, cv2.COLOR_RGB2BGR)       # Convert to BGR
-        tif_transform = src.transform
+        tif_img = reshape_as_image(src.read()).astype(np.uint8)
+        tif_img = cv2.cvtColor(tif_img, cv2.COLOR_RGB2BGR)
 
-    # Color map for defect types
+    # Color map for defect types.
     color_map = {
         "hotspots":      (0, 0, 255),    # Red in BGR
-        "faultydiodes":  (255, 0, 0),    # Blue
-        "offlinepanels": (0, 255, 255)   # Yellow
+        "faultydiodes":  (255, 0, 0),    # Blue in BGR
+        "offlinepanels": (0, 255, 255)   # Yellow in BGR
     }
     defect_types = ["hotspots", "faultydiodes", "offlinepanels"]
 
+    # Assume the vector drawing dimensions match the original image.
+    w_layer = image_layer_vector.width
+    h_layer = image_layer_vector.height
+
+    # For each panel, process each defect type.
     for panel_key, panel_info in panel_defects_dict.items():
         bx, by, bw, bh = panel_info["bbox"]
+        # Calculate the panel center.
         panel_center_x = bx + bw // 2
         panel_center_y = by + bh // 2
 
-        # Determine crop size
+        # Determine the crop area (in pixels).
         half_size = (crop_panel_size * default_panel_width) // 2
         xmin = panel_center_x - half_size
         ymin = panel_center_y - half_size
@@ -344,55 +361,53 @@ def annotate_and_crop_defect_area(
 
         for defect_type in defect_types:
             defect_list = panel_info[defect_type]
-            if len(defect_list) == 0:
-                continue
+            if not defect_list:
+                continue  # Skip if no defects of this type
 
-            # -----------------------------
-            # 1) Create a vector (SVG) layer image with a blue crop rectangle.
-            # -----------------------------
-            col_idx, row_idx = panel_key
-            layer_filename = f"{defect_type}_({col_idx}-{row_idx})_layer.svg"
+            # Construct file names based on panel key.
+            col_idx, row_idx = panel_key  # Assuming panel_key is a tuple like (col, row)
+            layer_filename = f"{defect_type}_({col_idx}-{row_idx})_layer.pdf"
             layer_path = os.path.join(output_dir, layer_filename)
-            
-            # Try to get the dimensions of the layer image.
-            layer_img_cv = cv2.imread(layer_image_path)
-            if layer_img_cv is not None:
-                h_layer, w_layer = layer_img_cv.shape[:2]
-            else:
-                h_layer, w_layer = tif_img.shape[:2]
-            
-            # Create an SVG drawing with the same coordinate system.
-            dwg = svgwrite.Drawing(filename=layer_path, size=(w_layer, h_layer), viewBox=f"0 0 {w_layer} {h_layer}")
-            # Embed the original layer image (referenced externally)
-            dwg.add(dwg.image(href=layer_image_path, insert=(0, 0), size=(w_layer, h_layer)))
-            # Draw the blue rectangle (no fill, stroke width 3)
-            rect_width = xmax - xmin
-            rect_height = ymax - ymin
-            dwg.add(dwg.rect(insert=(xmin, ymin), size=(rect_width, rect_height),
-                             stroke="blue", fill="none", stroke_width=3))
-            dwg.save()
 
-            # -----------------------------
-            # 2) Annotate a copy of the TIFF with only this defect type.
-            # -----------------------------
+            # --- 1) Build a vector layer with blue crop rectangle ---
+            # Make a deep copy of the provided drawing so we don't modify the original.
+            vector_copy = copy.deepcopy(image_layer_vector)
+            # In ReportLab drawings the origin is at the bottom-left.
+            # Our crop region was computed using top-left origin coordinates.
+            # Convert the crop rectangle’s y-coordinate:
+            rect_y = h_layer - ymax
+            crop_width = xmax - xmin
+            crop_height = ymax - ymin
+            vector_copy.add(
+                Rect(xmin, rect_y, crop_width, crop_height,
+                     strokeColor=colors.blue, strokeWidth=50, fillColor=None)
+            )
+            renderPDF.drawToFile(vector_copy, layer_path)
+
+            # --- 2) Annotate the TIFF image with only this defect type ---
             annotated_tif = tif_img.copy()
             for defect_data in defect_list:
                 dx, dy, dw, dh = defect_data["bbox"]
-                contour = np.array([[dx, dy], [dx+dw, dy], [dx+dw, dy+dh], [dx, dy+dh]], dtype=np.int32)
+                contour = np.array([
+                    [dx, dy],
+                    [dx + dw, dy],
+                    [dx + dw, dy + dh],
+                    [dx, dy + dh]
+                ], dtype=np.int32)
                 cv2.drawContours(annotated_tif, [contour], -1, color_map[defect_type], thickness=3)
 
-            # -----------------------------
-            # 3) Crop the annotated TIFF image.
-            # -----------------------------
+            # --- 3) Crop the annotated TIFF image ---
             crop_h = half_size * 2
             crop_w = half_size * 2
             cropped_img = np.ones((crop_h, crop_w, 3), dtype=np.uint8) * 255  # white background
 
+            # Determine the source crop region within the TIFF.
             x1_crop = max(0, xmin)
             y1_crop = max(0, ymin)
             x2_crop = min(tif_img.shape[1], xmax)
             y2_crop = min(tif_img.shape[0], ymax)
 
+            # Determine where to paste in the cropped image (if the crop goes off-image).
             target_x1 = max(0, -xmin)
             target_y1 = max(0, -ymin)
             target_x2 = target_x1 + (x2_crop - x1_crop)
@@ -401,14 +416,185 @@ def annotate_and_crop_defect_area(
             cropped_img[target_y1:target_y2, target_x1:target_x2] = \
                 annotated_tif[y1_crop:y2_crop, x1_crop:x2_crop]
 
-            # Name for the cropped image.
+            # Save the cropped image as a JPEG.
             cropped_filename = f"{defect_type}_({col_idx}-{row_idx})_cropped.jpg"
             cropped_path = os.path.join(output_dir, cropped_filename)
-            # Downscale before saving.
-            downscaled_img = cv2.resize(cropped_img, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_AREA)
+            downscaled_img = cv2.resize(cropped_img, None, fx=scale_factor, fy=scale_factor,
+                                        interpolation=cv2.INTER_AREA)
             cv2.imwrite(cropped_path, downscaled_img)
-    
+
     print(f"Finished cropping by defect type. Saved results to '{output_dir}'.")
+
+
+
+
+def annotate_and_crop_defect_area(
+    tif_path,
+    panel_defects_dict,
+    image_layer_vector,
+    default_panel_width=127,
+    crop_panel_size=5,  # in panel units
+    output_dir="output_annotations",
+    scale_factor=0.5
+):
+    """
+    For each panel in `panel_defects_dict` (whose "bbox" is in drawing coordinates, i.e.
+    (x, y, w, h) with origin at bottom-left), do the following:
+      1. Convert the panel bbox back to original coordinates (origin at top-left) to compute
+         the correct TIFF crop region.
+      2. Compute both the drawing center and the original center.
+      3. Create a PDF vector layer by copying the provided vector drawing (image_layer_vector)
+         and overlaying a blue rectangle (in drawing coordinates) that marks the crop area.
+         The resulting PDF is saved as: "<defect_type>_(col-row)_layer.pdf"
+      4. Annotate a copy of the TIFF image with only that defect type’s contours,
+         crop around the panel center (using original coordinates), downscale,
+         and save as a JPEG: "<defect_type>_(col-row)_cropped.jpg"
+         
+    Args:
+        tif_path (str): Path to the TIFF image.
+        panel_defects_dict (dict): Dictionary of panel information and defect lists.
+            Each panel's "bbox" is in drawing coordinates (origin bottom-left).
+        image_layer_vector (reportlab.graphics.shapes.Drawing):
+            A ReportLab Drawing (vector) containing the annotated defect map.
+        default_panel_width (int): Default panel width in pixels.
+        crop_panel_size (int): Crop size in units of panel widths.
+        output_dir (str): Directory to save outputs.
+        scale_factor (float): Downscale factor for the cropped JPEG.
+        
+    Returns:
+        None. Files are saved to `output_dir`.
+    """
+    import os, copy
+    import cv2
+    import numpy as np
+    import rasterio
+    from rasterio.plot import reshape_as_image
+    from reportlab.graphics.shapes import Rect
+    from reportlab.lib import colors
+    from reportlab.graphics import renderPDF
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    # --- Load the original TIFF image (which uses a top-left origin) ---
+    with rasterio.open(tif_path) as src:
+        img_h, img_w = src.height, src.width
+        tif_img = reshape_as_image(src.read()).astype(np.uint8)
+        tif_img = cv2.cvtColor(tif_img, cv2.COLOR_RGB2BGR)
+
+    # Color mapping for defect types.
+    color_map = {
+        "hotspots":      (0, 0, 255),    # Red
+        "faultydiodes":  (255, 0, 0),    # Blue
+        "offlinepanels": (0, 255, 255)   # Yellow
+    }
+    defect_types = ["hotspots", "faultydiodes", "offlinepanels"]
+
+    # Assume vector drawing dimensions match the TIFF.
+    w_layer = image_layer_vector.width
+    h_layer = image_layer_vector.height
+
+    # Compute half-size for the crop region.
+    half_size = (crop_panel_size * default_panel_width) // 2
+
+    # Process each panel.
+    # Here, each panel's bbox is (x, y, w, h) in drawing coordinates (origin bottom-left).
+    for panel_key, panel_info in panel_defects_dict.items():
+        # Unpack panel bbox from drawing coords.
+        x_draw, y_draw, panel_w, panel_h = panel_info["bbox"]
+
+        # Compute panel center in drawing coordinates.
+        center_draw_x = x_draw + panel_w // 2
+        center_draw_y = y_draw + panel_h // 2
+
+        # Convert the panel bbox back to original coordinates.
+        # Original x remains the same.
+        # Original y = img_h - y_draw - panel_h.
+        x_orig = x_draw
+        y_orig = img_h - y_draw - panel_h
+        center_orig_x = x_orig + panel_w // 2
+        center_orig_y = y_orig + panel_h // 2
+
+        # --- Define crop regions ---
+        # For vector overlay (drawing coordinates):
+        xmin_draw = center_draw_x - half_size
+        ymin_draw = center_draw_y - half_size
+        crop_width_draw = 2 * half_size
+        crop_height_draw = 2 * half_size
+
+        # For TIFF cropping (original coordinates):
+        xmin_orig = center_orig_x - half_size
+        ymin_orig = center_orig_y - half_size
+        xmax_orig = center_orig_x + half_size
+        ymax_orig = center_orig_y + half_size
+
+        for defect_type in defect_types:
+            defect_list = panel_info[defect_type]
+            if not defect_list:
+                continue  # Skip if no defects of this type
+
+            # Construct filenames based on panel key.
+            col_idx, row_idx = panel_key  # Assuming panel_key is a tuple (col, row)
+            layer_filename = f"{defect_type}_({col_idx}-{row_idx})_layer.pdf"
+            layer_path = os.path.join(output_dir, layer_filename)
+
+            # --- 1) Build vector layer with blue crop rectangle ---
+            # Deep-copy the provided vector drawing.
+            vector_copy = copy.deepcopy(image_layer_vector)
+            # Overlay the blue rectangle in drawing coordinates.
+            vector_copy.add(
+                Rect(xmin_draw, ymin_draw, crop_width_draw, crop_height_draw,
+                     strokeColor=colors.blue, strokeWidth=50, fillColor=None)
+            )
+            renderPDF.drawToFile(vector_copy, layer_path)
+
+            # --- 2) Annotate the TIFF with only this defect type ---
+            annotated_tif = tif_img.copy()
+            for defect_data in defect_list:
+                dx, dy, dw, dh = defect_data["bbox"]
+                contour = np.array([
+                    [dx, dy],
+                    [dx + dw, dy],
+                    [dx + dw, dy + dh],
+                    [dx, dy + dh]
+                ], dtype=np.int32)
+                cv2.drawContours(annotated_tif, [contour], -1, color_map[defect_type], thickness=3)
+
+            # --- 3) Crop the annotated TIFF using original coordinates ---
+            crop_h_orig = 2 * half_size
+            crop_w_orig = 2 * half_size
+            cropped_img = np.ones((crop_h_orig, crop_w_orig, 3), dtype=np.uint8) * 255  # white background
+
+            # Determine the region to copy from the TIFF.
+            x1_crop = max(0, xmin_orig)
+            y1_crop = max(0, ymin_orig)
+            x2_crop = min(tif_img.shape[1], xmax_orig)
+            y2_crop = min(tif_img.shape[0], ymax_orig)
+
+            # Compute paste offset if the crop goes off-image.
+            target_x1 = max(0, -xmin_orig)
+            target_y1 = max(0, -ymin_orig)
+            target_x2 = target_x1 + (x2_crop - x1_crop)
+            target_y2 = target_y1 + (y2_crop - y1_crop)
+
+            if (target_y2 - target_y1) > 0 and (target_x2 - target_x1) > 0:
+                cropped_img[target_y1:target_y2, target_x1:target_x2] = \
+                    annotated_tif[y1_crop:y2_crop, x1_crop:x2_crop]
+            else:
+                print(f"Warning: Empty crop region for panel {panel_key}, defect {defect_type}.")
+                continue
+
+            # Save the cropped image as JPEG.
+            cropped_filename = f"{defect_type}_({col_idx}-{row_idx})_cropped.jpg"
+            cropped_path = os.path.join(output_dir, cropped_filename)
+            downscaled_img = cv2.resize(cropped_img, None, fx=scale_factor, fy=scale_factor,
+                                        interpolation=cv2.INTER_AREA)
+            cv2.imwrite(cropped_path, downscaled_img)
+
+    print(f"Finished cropping by defect type. Saved results to '{output_dir}'.")
+
+
+
+
 
 
 def process_and_rename_images(
@@ -615,4 +801,47 @@ def process_and_rename_images(
 
 
 
+
+def svg_to_pdf(images_dir, export_latex=False):
+    """
+    Converts all SVG files in the provided directory to PDF files using Inkscape.
+    The PDF files will have the same base name as the SVG files.
+    Optionally, if export_latex is True, Inkscape will be called with --export-latex,
+    producing two files: one PDF and one .pdf_tex file.
+    After conversion, the original SVG files are deleted.
+    
+    Args:
+        images_dir (str): Path to the directory containing SVG files.
+        export_latex (bool): Whether to export using the PDF+LaTeX option.
+    
+    Returns:
+        None.
+    """
+    # Check if Inkscape is available
+    try:
+        subprocess.run(["inkscape", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as e:
+        print("Inkscape is not installed or not in PATH:", e)
+        return
+
+    # Loop through SVG files in the directory.
+    for filename in os.listdir(images_dir):
+        if filename.lower().endswith('.svg'):
+            svg_path = os.path.join(images_dir, filename)
+            base = os.path.splitext(filename)[0]
+            pdf_filename = base + ".pdf"
+            pdf_path = os.path.join(images_dir, pdf_filename)
+            
+            # Build command list: use --export-latex if desired.
+            cmd = ["inkscape", "-D", svg_path, "-o", pdf_path]
+            if export_latex:
+                cmd = ["inkscape", "-D", svg_path, "-o", pdf_path, "--export-latex"]
+            try:
+                print("Converting:", svg_path)
+                subprocess.run(cmd, check=True)
+                print(f"Converted {svg_path} to {pdf_path}")
+                os.remove(svg_path)
+                print(f"Deleted {svg_path}")
+            except subprocess.CalledProcessError as e:
+                print(f"Error converting {svg_path}: {e}")
 

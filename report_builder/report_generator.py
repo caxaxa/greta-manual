@@ -15,7 +15,7 @@ def generate_report(defects_dict, area_name, current_dir):
     orthophoto_path_img = os.path.join(report_images_dir, 'ortho.png')
     aisol_logo_path = os.path.join(report_images_dir, 'aisol_logo.png')
     aisol_logo_2_path = os.path.join(report_images_dir, 'logo_2.png')
-    layer_img_path = os.path.join(report_images_dir, 'layer_img.svg')
+    layer_img_path = os.path.join(report_images_dir, 'layer_img.pdf')
     top_view = os.path.join(report_images_dir, "topview.png")
     match = os.path.join(report_images_dir, "matchgraph.png")
     overlap = os.path.join(report_images_dir, "overlap.png")
@@ -66,13 +66,16 @@ def generate_report(defects_dict, area_name, current_dir):
     doc = pl.Document(documentclass="article", document_options='dvipsnames')
     doc.preamble.append(pl.Command('usepackage', options='utf8', arguments='inputenc'))
     doc.preamble.append(pl.Command('usepackage', options='brazil', arguments='babel'))
-    doc.packages.append(pl.Package('geometry'))
     doc.packages.append(pl.Package("graphicx"))
     doc.packages.append(pl.Package('placeins'))
     doc.packages.append(pl.Package('calc'))
     doc.packages.append(pl.Package('tikz'))
     doc.packages.append(pl.Package('xcolor'))
     doc.packages.append(pl.Package('fancyhdr'))
+    doc.packages.append(pl.Package('subfig'))
+    doc.packages.append(pl.Package('geometry'))
+
+
     # Add booktabs for a cleaner table layout
     doc.packages.append(pl.Package('booktabs'))
 
@@ -171,120 +174,6 @@ def generate_report(defects_dict, area_name, current_dir):
         "offlinepanels": "Painéis Desligados",
         "faultydiodes": "Diodos de Bypass Queimados"
     }
-
-
-    # --- Defect Summary Table in academic style ---
-    if defects_dict:
-        rows_per_table = 35
-        defects_items = list(defects_dict.items())  # e.g. [("1-2_hotspots_1", {...}), ("1-2_hotspots_2", {...}), ...]
-        total_rows = len(defects_items)
-        
-        for batch_idx in range(0, total_rows, rows_per_table):
-            with doc.create(pl.Table(position='h!')) as table:
-                caption = ("Resumo dos Defeitos Identificados" 
-                        if batch_idx == 0 
-                        else "Resumo dos Defeitos Identificados (cont.)")
-                table.add_caption(caption)
-                with doc.create(pl.Tabular("lll")) as tabular:
-                    tabular.append(NoEscape(r'\toprule'))
-                    tabular.add_row(["Tipo de Problema", "Local do Painel", "Coordenadas"], escape=False)
-                    tabular.append(NoEscape(r'\midrule'))
-                    # Add rows for the current batch
-                    for key, defect in defects_items[batch_idx:batch_idx + rows_per_table]:
-                        # Expect key format: "local_issue_extra" e.g. "1-2_hotspots_1"
-                        parts = key.split("_")
-                        if len(parts) >= 2:
-                            local = parts[0]  # e.g., "1-2"
-                            issue = parts[1].lower()  # e.g., "hotspots"
-                        else:
-                            local = key
-                            issue = defect["issue_type"].lower()
-                        tipo_problema = expected_types.get(issue, issue)
-                        tabular.add_row([tipo_problema, local, str(defect["panel_centroid_geospatial"])])
-                    tabular.append(NoEscape(r'\bottomrule'))
-            doc.append(NoEscape(r'\FloatBarrier'))
-    else:
-        doc.append("Nenhum defeito identificado.")
-
-
-
-    # Group defects by (issue, local) so that each panel appears once per defect type.
-    defects_by_type_local = {}
-    for key, defect in defects_dict.items():
-        parts = key.split("_")
-        if len(parts) >= 2:
-            local = parts[0]         # e.g., "1-2"
-            issue = parts[1].lower()   # e.g., "hotspots"
-        else:
-            local = key
-            issue = defect["issue_type"].lower()
-        defects_by_type_local.setdefault((issue, local), []).append(defect)
-
-        # For each expected issue type, create a section.
-        for issue in expected_types:
-            doc.append(NoEscape(r'\newpage'))
-            section_title = expected_types[issue]
-            doc.append(NoEscape(r'\section{' + section_title + '}'))
-            
-            # Get all groups for this issue type.
-            groups = [(local, defects) for (iss, local), defects in defects_by_type_local.items() if iss == issue]
-            
-            if groups:
-                # Append introductory text for the section.
-                if issue == "hotspots":
-                    intro_text = "Foram detectados pontos quentes nas placas abaixo."
-                elif issue == "offlinepanels":
-                    intro_text = "Foram detectadas anomalias indicando painel(es) desligados nas placas abaixo."
-                elif issue == "faultydiodes":
-                    intro_text = "Foram detectados diodos de bypass queimados nas placas abaixo."
-                else:
-                    intro_text = ""
-                doc.append(intro_text + "\n")
-                
-                # Process each panel group for this issue.
-                for local, defects_list in groups:
-                    # Create a subsubsection for the panel.
-                    doc.append(NoEscape(r'\subsubsection{Painel ' + local + '}'))
-                    
-                    # Parse local string (expected "col-row") into column and row.
-                    try:
-                        col, row = local.split("-")
-                    except Exception:
-                        col, row = "?", "?"
-                    overall_caption = f"Imagens do Painel n. {row} da coluna n. {col}."
-                    
-                    # Build filenames using the naming convention.
-                    # E.g.: hotspots_(1-2)_layer.svg, hotspots_(1-2)_cropped.jpg, hotspots_(1-2).jpg
-                    defect_map  = os.path.join(report_images_dir, f"{issue}_({local})_layer.svg")
-                    defect_crop = os.path.join(report_images_dir, f"{issue}_({local})_cropped.jpg")
-                    drone_img   = os.path.join(report_images_dir, f"{issue}_({local}).jpg")
-                    
-                    # Create a figure using subfloats.
-                    with doc.create(pl.Figure(position='h!')) as fig:
-                        fig.append(NoEscape(r'\centering'))
-                        fig.append(NoEscape(r'\subfloat[Recorte do Painel em Análise]{\includegraphics[width=0.31\linewidth]{' + defect_map + r'}}'))
-                        fig.append(NoEscape(r'\hfill'))
-                        fig.append(NoEscape(r'\subfloat[Localização do Problema]{\includegraphics[width=0.31\linewidth]{' + defect_crop + r'}}'))
-                        fig.append(NoEscape(r'\hfill'))
-                        fig.append(NoEscape(r'\subfloat[Imagem Original do Drone]{\includegraphics[width=0.31\linewidth]{' + drone_img + r'}}'))
-                        fig.append(NoEscape(r'\caption{' + overall_caption + r'}'))
-                    doc.append(NoEscape(r'\FloatBarrier'))
-                            # Add optional descriptive text per defect type.
-                if issue == "hotspots":
-                    doc.append(f"No painel {local}, há sinais de pontos quentes conforme as figuras acima.\n")
-                elif issue == "offlinepanels":
-                    doc.append(f"No painel {local}, foram detectadas anomalias indicando painel(es) desligados.\n")
-                elif issue == "faultydiodes":
-                    doc.append(f"No painel {local}, foram detectados diodos de bypass queimados.\n")
-            else:
-                # No defects found for this issue type.
-                if issue == "hotspots":
-                    doc.append("Não foram encontrados problemas de pontos quentes na área inspecionada.\n")
-                elif issue == "offlinepanels":
-                    doc.append("Não foram encontrados problemas de painéis desligados na área inspecionada.\n")
-                elif issue == "faultydiodes":
-                    doc.append("Não foram encontrados problemas de diodos de bypass queimados na área inspecionada.\n")
-
 
 
 

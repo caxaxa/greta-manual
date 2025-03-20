@@ -3,7 +3,7 @@ import subprocess
 def run_pdflatex(tex_path, output_dir, runs=1):
     for _ in range(runs):
         process = subprocess.Popen(
-            ["pdflatex", "-interaction=nonstopmode", tex_path],
+            ["pdflatex", "--shell-escape", "-interaction=nonstopmode", tex_path],
             cwd=output_dir,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -12,13 +12,12 @@ def run_pdflatex(tex_path, output_dir, runs=1):
 
         stdout, stderr = process.communicate()
 
-        # # print outputs
+        # Uncomment these if you need to debug:
         # if stdout:
         #     print(stdout)
         # if stderr:
         #     print(stderr)
 
-        # Break the loop if the process had an error
         if process.returncode != 0:
             print(f"Error generating PDF. Return code: {process.returncode}")
             break

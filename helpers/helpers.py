@@ -76,3 +76,15 @@ def flatten_panel_defects_dict(panel_defects_dict):
                 # flattened[unique_key]["bbox"] = defect_info.get("bbox")
                 # etc.
     return flattened
+
+def sort_key(item):
+    key, _ = item
+    # Extract the local coordinate part (e.g., "1-2") from the key.
+    local = key.split("_")[0]
+    try:
+        col, row = local.split("-")
+        # Convert to integers for proper numerical comparison.
+        return (int(col), int(row))
+    except Exception:
+        # If the key doesn't match the expected format, push it to the end.
+        return (float('inf'), float('inf'))

@@ -1,6 +1,6 @@
 #from image_processing.processing import  json_to_contours_by_label, get_defect_centroids
-from image_processing.image_creation import generate_defect_map, annotate_and_downscale_orthophoto, process_and_rename_images, annotate_and_crop_defect_area
-from helpers.helpers import load_orthophoto , flatten_panel_defects_dict
+from image_processing.image_creation import generate_defect_map, annotate_and_downscale_orthophoto, process_and_rename_images, annotate_and_crop_defect_area 
+from helpers.helpers import load_orthophoto , flatten_panel_defects_dict,sort_key
 from report_builder.report_generator import generate_report
 from report_builder.tex_to_pdf import run_pdflatex
 from DXF_layers.layer_generator import process_geotiff
@@ -45,10 +45,10 @@ if __name__ == "__main__":
 
     print('Orthophoto Downscaled and Saved')
 
-    layer_image_path = os.path.join(current_dir, report_images_dir, "layer_img.png")
+    layer_image_path = os.path.join(current_dir, report_images_dir, "layer_img.pdf")
                                  
     # Creating a deffects dict
-    panel_defects = generate_defect_map(
+    panel_defects, image_layer_vector = generate_defect_map(
         tif_path = ortho_path,
         annotation_json_path = json_path,
         alignment='vertical',
@@ -63,11 +63,11 @@ if __name__ == "__main__":
     annotate_and_crop_defect_area(
         tif_path = ortho_path,
         panel_defects_dict = panel_defects,
-        layer_image_path = layer_image_path,  # or another reference layer
+        image_layer_vector = image_layer_vector,  # or another reference layer
         default_panel_width=127,
         crop_panel_size=5,
         output_dir=report_images_dir,
-        scale_factor = 0.25
+        scale_factor = 0.5
     )
 
     print('Locate the Panel Original Drone Images')
@@ -79,16 +79,16 @@ if __name__ == "__main__":
         quality = 70
     )
 
-
+    print('Images successfully prepared')
 
 
     # Generating Latex Report:
 
-    print('Images successfully prepared')
+
+
 
     #stats_file = os.path.join(report_dir,  'report_images' ,'stats.json')
     flatned_panel_defects = flatten_panel_defects_dict(panel_defects) 
-
 
     latex_code = generate_report(flatned_panel_defects, 'Área Teste', current_dir)
 
