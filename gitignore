@@ -1,7 +1,6 @@
 # Ignore the contents of the Inputs folder
 Inputs/
 Output/
-report/
 DXF_Layers/__pycache__
 helpers/__pycache__
 image_processing/__pycache__
