@@ -151,22 +151,26 @@ def generate_report(defects_dict, area_name, current_dir):
 
     # Main Content Sections
     doc.append(NoEscape(r'\section{Introduction}'))
-    doc.append(intro_text_pt)
+    doc.append(NoEscape(intro_text_pt))
     if stats:
-        doc.append(drone_intro)
+        doc.append(NoEscape(drone_intro))
     doc.append(NoEscape(r'\section{Dados do Cliente}'))
     doc.append(client_data)
     doc.append(NoEscape(r'\section{Visão Geral da Área}'))
-    doc.append(text_3_1_pt)
+    doc.append(NoEscape(text_3_1_pt))
     doc.append(NoEscape(r'\FloatBarrier'))
     with doc.create(pl.Figure(position='h!')) as fig:
-        fig.add_image(orthophoto_path_img)
+        fig.add_image(orthophoto_path_img, width=NoEscape(r'0.6\linewidth'))
         fig.add_caption("Ortofoto")
+
     doc.append(NoEscape(r'\FloatBarrier'))
+
     with doc.create(pl.Figure(position='h!')) as fig:
-        fig.add_image(layer_img_path)
+        fig.add_image(layer_img_path, width=NoEscape(r'0.6\linewidth'))
         fig.add_caption("Máscara dos Painéis")
+
     doc.append(NoEscape(r'\FloatBarrier'))
+
 
         # --- Defect Presentation by Issue Type ---
     expected_types = {
@@ -179,35 +183,35 @@ def generate_report(defects_dict, area_name, current_dir):
     # --- Defect Summary Table in academic style ---
     if defects_dict:
         rows_per_table = 35
-        defects_items = list(defects_dict.items())  # e.g. [("1-2_hotspots_1", {...}), ("1-2_hotspots_2", {...}), ...]
+        defects_items = list(defects_dict.items())
         total_rows = len(defects_items)
-        
+
         for batch_idx in range(0, total_rows, rows_per_table):
             with doc.create(pl.Table(position='h!')) as table:
                 caption = ("Resumo dos Defeitos Identificados" 
                         if batch_idx == 0 
                         else "Resumo dos Defeitos Identificados (cont.)")
                 table.add_caption(caption)
-                with doc.create(pl.Tabular("lll")) as tabular:
+                table.append(NoEscape(r'\centering'))  # Center the whole table
+                with doc.create(pl.Tabular("lcl")) as tabular:  # Center the 2nd column
                     tabular.append(NoEscape(r'\toprule'))
                     tabular.add_row(["Tipo de Problema", "Local do Painel", "Coordenadas"], escape=False)
                     tabular.append(NoEscape(r'\midrule'))
-                    # Add rows for the current batch
                     for key, defect in defects_items[batch_idx:batch_idx + rows_per_table]:
-                        # Expect key format: "local_issue_extra" e.g. "1-2_hotspots_1"
                         parts = key.split("_")
                         if len(parts) >= 2:
-                            local = parts[0]  # e.g., "1-2"
-                            issue = parts[1].lower()  # e.g., "hotspots"
+                            local = parts[0]
+                            issue = parts[1].lower()
                         else:
                             local = key
                             issue = defect["issue_type"].lower()
                         tipo_problema = expected_types.get(issue, issue)
-                        tabular.add_row([tipo_problema, local, str(defect["panel_centroid_geospatial"])])
+                        tabular.add_row([tipo_problema, local, str('ANONIMIZADO')])
                     tabular.append(NoEscape(r'\bottomrule'))
             doc.append(NoEscape(r'\FloatBarrier'))
     else:
         doc.append("Nenhum defeito identificado.")
+
 
 
 
